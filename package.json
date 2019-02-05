@@ -1,5 +1,5 @@
 {
-  "name": "watchdog",
+  "name": "offlineTs",
   "version": "1.0.0",
   "description": "ping a service to check if it is up",
   "main": "index.js",
