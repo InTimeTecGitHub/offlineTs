@@ -1,4 +1,4 @@
-# offlineTs
+# offlinets
 Watchdog will check service availability by pinging it.
 
 ## Usage
@@ -44,9 +44,6 @@ export class SampleObserver {
 })
 export class SampleObserver {
     state: number = 0;
-    get ObserverId(): string {
-        return "sample";
-    }
     //this function will be called when state of the system changes.
     async updateState() {
         this.state = 999;
