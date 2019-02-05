@@ -1,0 +1,22 @@
+{
+  "name": "watchdog",
+  "version": "1.0.0",
+  "description": "ping a service to check if it is up",
+  "main": "index.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/_mocha test"
+  },
+  "author": "Akhil Sasidharan",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.21",
+    "browserify": "^16.2.3",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.1"
+  },
+  "dependencies": {}
+}

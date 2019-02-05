@@ -1,0 +1,35 @@
+{
+    "compilerOptions": {
+      "module": "commonjs",
+      "target": "es2016",
+      "sourceMap": true,
+      "declaration": true,
+      "strictNullChecks": true,
+      "experimentalDecorators": true,
+      "noImplicitAny": true,
+      "alwaysStrict": true,
+      "moduleResolution": "node",
+      "types": [
+        "node",
+        "chai",
+        "mocha"
+      ],
+      "typeRoots": [
+        "node_modules/@types"
+      ],
+      "lib": [
+        "es2015",
+        "es2016",
+        "dom"
+      ]
+    },
+    "include": [
+      "index.ts",
+      "test",
+      "src"
+    ],
+    "exclude": [
+      "node_modules",
+      "!**/*.d.ts"
+    ]
+  }
