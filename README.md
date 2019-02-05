@@ -1,4 +1,4 @@
-# watchdog
+# offlineTs
 Watchdog will check service availability by pinging it.
 
 ## Usage
@@ -40,7 +40,7 @@ export class SampleObserver {
 ```ts
 @Observe({
     period: 1000,
-    ping: PingService
+    ping: new PingService()
 })
 export class SampleObserver {
     state: number = 0;
