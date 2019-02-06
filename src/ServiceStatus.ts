@@ -57,6 +57,6 @@ export class ServiceStatus {
     }
 
     constructor(private period: number = 1000) {
-        this.interval = setInterval(this.callback, this.period);
+        this.interval = setInterval(() => this.callback(), this.period);
     }
 }

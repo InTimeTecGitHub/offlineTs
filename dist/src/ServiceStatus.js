@@ -17,7 +17,7 @@ class ServiceStatus {
     constructor(period = 1000) {
         this.period = period;
         this.observers = new Map();
-        this.interval = setInterval(this.callback, this.period);
+        this.interval = setInterval(() => this.callback(), this.period);
     }
     attach(observer) {
         if (observer.ObserverId)

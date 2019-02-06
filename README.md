@@ -1,5 +1,5 @@
 # offlinets
-Watchdog will check service availability by pinging it.
+offlinets will check service availability by pinging it.
 
 ## Usage
 Define any class that should be notified and updated when the state of service changes.
