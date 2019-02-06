@@ -1,6 +1,6 @@
 {
   "name": "offlinets",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ping a service to check if it is up",
   "main": "index.js",
   "scripts": {
