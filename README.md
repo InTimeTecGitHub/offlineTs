@@ -20,12 +20,7 @@ interface PingService {
 })
 export class SampleObserver {
     state: number = 0;
-    
-    //this ObserverId must be unique for each instance.
-    //it will be used to resolve the Observer.
-    get ObserverId(): string {
-        return "sample";
-    }
+
     //this function will be called when state of the system changes.
     updateState() {
         this.state = 999;
@@ -45,11 +40,20 @@ export class SampleObserver {
 export class SampleObserver {
     state: number = 0;
     //this function will be called when state of the system changes.
-    async updateState() {
+    async updateState(state: StateType) {
         this.state = 999;
         return true
     }
     constructor() {
     }
 }
+```
+
+## StateType is as follows
+```ts
+export enum StateType {
+    ONLINE,
+    OFFLINE
+}
+
 ```

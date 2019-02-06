@@ -1,8 +1,8 @@
-import {ServiceStatus} from "./ServiceStatus";
+import {ServiceStatus, StateType} from "./ServiceStatus";
 import {PingService, defaultPingService} from "./PingService";
 
 export interface Observer {
-    updateState: () => Promise<boolean>;
+    updateState: (state: StateType) => Promise<any>;
     ObserverId?: number;
 }
 

@@ -43,7 +43,7 @@ export class ServiceStatus {
         return this;
     }
     notify() {
-        this.observers.forEach(observer => observer.updateState());
+        this.observers.forEach(observer => observer.updateState(this.State));
     }
 
     private async callback() {
