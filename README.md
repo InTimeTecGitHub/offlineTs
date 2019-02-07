@@ -13,7 +13,7 @@ interface PingService {
 }
 ```
 
-### this syntax uses the DefaultPingService.
+### This syntax uses the DefaultPingService.
 ```ts
 @Observe({
     period: 1000
@@ -31,7 +31,7 @@ export class SampleObserver {
 ```
 
 
-### user implemented PingService.
+### User implemented PingService.
 ```ts
 @Observe({
     period: 1000,
