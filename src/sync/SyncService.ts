@@ -1,7 +1,6 @@
-// import {StateType} from "./StateType";
-//
 import {StateType} from "./StateType";
 import {Observe} from "../Observer";
+import {OfflineDataService} from "./OfflineDataService";
 
 export enum SyncStatus {
     NO_DATA,
@@ -10,46 +9,41 @@ export enum SyncStatus {
 
 @Observe()
 export class SyncService {
-    private state: number = SyncStatus.NO_DATA;
+    private state: number;
 
     get State() {
         return this.state;
     }
 
+    //TODO: Use this in onOnline function
     set State(state: number) {
         this.state = state;
     }
 
-//     constructor() {
-//
-//     }
-//
+    constructor(private offlineDataService: OfflineDataService = new OfflineDataService()) {
+        this.state = SyncStatus.NO_DATA;
+    }
+
     private onOnline() {
-        //TODO: Check if data exists
-        //TODO: then sync
         this.sync();
     }
 
     private onOffline() {
         //TODO: Do nothing
+        return "nothing to do";
     }
 
-    async updateState(state: StateType): Promise<string> {
+    async updateState(state: StateType) {
         if (state === StateType.ONLINE) {
-            //TODO
             this.onOnline();
-            return "online";
         }
         if (state === StateType.OFFLINE) {
-            //TODO
             this.onOffline();
-            return "offline";
         }
-        return "";
     }
 
-
-    async sync() {
-       //TODO: Check for data
+    private async sync() {
+        //TODO: Call sync API of OfflineDataService
+        //TODO: Plan error handling
     }
 }

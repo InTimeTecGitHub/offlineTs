@@ -5,15 +5,17 @@ import {StateType} from "../src/sync/StateType";
 import {OfflineDataService} from "../src/sync/OfflineDataService";
 
 describe.only("@SyncService", async () => {
-    let syncService: SyncService;
+    let syncService: SyncService, hasData: any, getOfflineData: any;
 
     beforeEach(async () => {
-        syncService = new SyncService();
-        sinon.stub(OfflineDataService);
+        syncService = new SyncService(new OfflineDataService());
+        hasData = sinon.stub(OfflineDataService.prototype, "hasData");
+        getOfflineData = sinon.stub(OfflineDataService.prototype, "getOfflineData");
     });
 
     afterEach(async () => {
-        clearInterval(1000);
+        hasData.restore();
+        getOfflineData.restore();
     });
 
     describe("State getter and setter", async () => {
@@ -35,7 +37,7 @@ describe.only("@SyncService", async () => {
     describe("UpdateState", async () => {
         it("should go offline when state changes", async () => {
             let changedState = await syncService.updateState(StateType.OFFLINE);
-            expect(changedState).to.equal("offline");
+            expect(changedState).to.equal("nothing to do");
         });
 
         it("should go online when state changes", async () => {
