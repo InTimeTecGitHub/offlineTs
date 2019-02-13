@@ -12,49 +12,39 @@ export class SyncService {
     private state: number;
     private isSyncSuccess: boolean;
 
-    // private promise: Promise<boolean>;
+    constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
+                private maxRetry: number = Infinity) {
+    }
 
     get State(): number {
         return this.state;
     }
 
-    //TODO: Use this in onOnline function
     set State(state: number) {
         this.state = state;
     }
 
-    // get SyncPromise(): Promise<boolean> {
-    //     return new Promise(()=>{
-    //
-    //     });
-    //     return this.promise;
-    // }
-    //
-    // set SyncPromise(promise: Promise<boolean>) {
-    //     this.promise = promise;
-    // }
-
-    constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
-                private maxRetry: number = Infinity) {
-        //this.state = SyncStatus.NO_DATA;
+    async updateState(state: StateType) {
+        if (state === StateType.ONLINE) {
+            await this.onOnline();
+        }
     }
 
     private async onOnline() {
         await this.sync();
     }
 
-    // private onOffline() {
-    //     //TODO: Do nothing
-    //     return "nothing to do";
-    // }
-
-    async updateState(state: StateType) {
-        if (state === StateType.ONLINE) {
-            await this.onOnline();
+    private async sync() {
+        let hasData: boolean = await this.offlineDataService.hasData();
+        if (!hasData) {
+            this.transitionToNoDataState();
+            return;
         }
-        // if (state === StateType.OFFLINE) {
-        //     this.onOffline();
-        // }
+        await this.transitionToDataState();
+    }
+
+    private transitionToNoDataState() {
+        this.State = SyncStatus.NO_DATA;
     }
 
     private async transitionToDataState() {
@@ -79,16 +69,4 @@ export class SyncService {
         }
     }
 
-    private transitionToNoDataState() {
-        this.State = SyncStatus.NO_DATA;
-    }
-
-    private async sync() {
-        let hasData: boolean = await this.offlineDataService.hasData();
-        if (!hasData) {
-            this.transitionToNoDataState();
-            return;
-        }
-        await this.transitionToDataState();
-    }
 }
