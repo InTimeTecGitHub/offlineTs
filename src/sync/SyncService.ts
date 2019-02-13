@@ -3,13 +3,14 @@ import {Observe} from "../Observer";
 import {OfflineDataService} from "./OfflineDataService";
 
 export enum SyncStatus {
+    WAITING,
     NO_DATA,
     DATA
 }
 
 @Observe()
 export class SyncService {
-    private state: number;
+    private state: number = SyncStatus.WAITING;
     private isSyncSuccess: boolean;
 
     constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
@@ -24,8 +25,8 @@ export class SyncService {
         this.state = state;
     }
 
-    async updateState(state: StateType) {
-        if (state === StateType.ONLINE) {
+    async updateState(networkState: StateType) {
+        if (networkState === StateType.ONLINE) {
             await this.onOnline();
         }
     }

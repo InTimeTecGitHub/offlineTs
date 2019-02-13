@@ -109,8 +109,10 @@ describe("@SyncService", async () => {
             stubConsecutiveCalls(true);
 
             syncService.updateState(StateType.ONLINE);
+            expect(syncService.State).to.equal(SyncStatus.WAITING);
 
             await syncService.updateState(StateType.OFFLINE);
+            expect(syncService.State).to.equal(SyncStatus.DATA);
 
             await syncService.updateState(StateType.ONLINE);
             expect(syncService.State).to.equal(SyncStatus.NO_DATA);
