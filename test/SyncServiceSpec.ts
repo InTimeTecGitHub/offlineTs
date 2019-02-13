@@ -51,7 +51,7 @@ describe("@SyncService", async () => {
             expect(syncService.State).to.equal(SyncStatus.NO_DATA);
         });
 
-        it("should sync data and transition to NO_DATA state", async () => {
+        it("should sync data and transition to 'NO_DATA' state", async () => {
             stubFakes(true, true);
 
             await syncService.updateState(StateType.ONLINE);
@@ -83,7 +83,7 @@ describe("@SyncService", async () => {
             }
         });
 
-        it("should transition to 'NO_DATA' state after trying sync twice successfully", async () => {
+        it("should sync successfully and transition to 'NO_DATA' state after two tries", async () => {
             try {
                 stubResolveAfterTwoTry("Sync Failed");
                 await syncService.updateState(StateType.ONLINE);
