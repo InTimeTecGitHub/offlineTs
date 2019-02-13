@@ -1,15 +1,9 @@
-import {SyncReport} from "./SyncReport";
-
 export class OfflineDataService {
-    sync(): Promise<SyncReport> {
-        throw new Error("not imlepemented");
+    sync(): Promise<boolean> {
+        throw new Error("Not yet Implemented");
     }
 
     hasData(): Promise<boolean> {
-        throw new Error("not imlepemented");
-    }
-
-    getOfflineData(): Promise<any> {
-        throw new Error("not imlepemented");
+        throw new Error("Not yet Imlepemented");
     }
 }

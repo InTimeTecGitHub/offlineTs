@@ -10,8 +10,11 @@ export enum SyncStatus {
 @Observe()
 export class SyncService {
     private state: number;
+    private isSyncSuccess: boolean;
 
-    get State() {
+    // private promise: Promise<boolean>;
+
+    get State(): number {
         return this.state;
     }
 
@@ -20,30 +23,72 @@ export class SyncService {
         this.state = state;
     }
 
-    constructor(private offlineDataService: OfflineDataService = new OfflineDataService()) {
-        this.state = SyncStatus.NO_DATA;
+    // get SyncPromise(): Promise<boolean> {
+    //     return new Promise(()=>{
+    //
+    //     });
+    //     return this.promise;
+    // }
+    //
+    // set SyncPromise(promise: Promise<boolean>) {
+    //     this.promise = promise;
+    // }
+
+    constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
+                private maxRetry: number = Infinity) {
+        //this.state = SyncStatus.NO_DATA;
     }
 
-    private onOnline() {
-        this.sync();
+    private async onOnline() {
+        await this.sync();
     }
 
-    private onOffline() {
-        //TODO: Do nothing
-        return "nothing to do";
-    }
+    // private onOffline() {
+    //     //TODO: Do nothing
+    //     return "nothing to do";
+    // }
 
     async updateState(state: StateType) {
         if (state === StateType.ONLINE) {
-            this.onOnline();
+            await this.onOnline();
         }
-        if (state === StateType.OFFLINE) {
-            this.onOffline();
+        // if (state === StateType.OFFLINE) {
+        //     this.onOffline();
+        // }
+    }
+
+    private async transitionToDataState() {
+        let retry: number = 0;
+        while (!this.isSyncSuccess) {
+            try {
+                retry++;
+                this.State = SyncStatus.DATA;
+
+                this.isSyncSuccess = await this.offlineDataService.sync();
+
+                if (this.isSyncSuccess) {
+                    this.transitionToNoDataState();
+                } else if (retry === this.maxRetry) {
+                    return;
+                }
+            } catch (ex) {
+                if (retry === this.maxRetry) {
+                    throw(new Error(ex));
+                }
+            }
         }
     }
 
+    private transitionToNoDataState() {
+        this.State = SyncStatus.NO_DATA;
+    }
+
     private async sync() {
-        //TODO: Call sync API of OfflineDataService
-        //TODO: Plan error handling
+        let hasData: boolean = await this.offlineDataService.hasData();
+        if (!hasData) {
+            this.transitionToNoDataState();
+            return;
+        }
+        await this.transitionToDataState();
     }
 }
