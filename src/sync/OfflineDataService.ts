@@ -4,6 +4,6 @@ export class OfflineDataService {
     }
 
     hasData(): Promise<boolean> {
-        throw new Error("Not yet Imlepemented");
+        throw new Error("Not yet Implemented");
     }
 }

@@ -20,22 +20,6 @@ describe("@SyncService", async () => {
         sync.restore();
     });
 
-    describe("State initialization", async () => {
-        it("should have undefined state", () => {
-            expect(syncService.State).to.be.undefined;
-        });
-
-        it("should set state to have data", async () => {
-            syncService.State = SyncStatus.DATA;
-            expect(syncService.State).to.equal(SyncStatus.DATA);
-        });
-
-        it("should set state to have no data", async () => {
-            syncService.State = SyncStatus.NO_DATA;
-            expect(syncService.State).to.equal(SyncStatus.NO_DATA);
-        });
-    });
-
     describe("UpdateState", async () => {
         var stubFakes = (hasDataReturnValue: boolean, syncServiceReturnValue: boolean) => {
             hasData.returns(new Promise((resolve) => resolve(hasDataReturnValue)));
@@ -45,6 +29,19 @@ describe("@SyncService", async () => {
         var stubError = (errorMsg: string) => {
             hasData.returns(new Promise((resolve) => resolve(true)));
             sync.throws(errorMsg);
+        };
+
+        var stubResolveAfterTwoTry = (errorMsg: string) => {
+            hasData.returns(new Promise((resolve) => resolve(true)));
+            sync.onFirstCall().throws(errorMsg)
+                .onSecondCall().returns(new Promise((resolve) => resolve(true)));
+        };
+
+        var stubConsecutiveCalls = (hasDataReturnValue: boolean) => {
+            hasData.returns(new Promise((resolve) => resolve(hasDataReturnValue)));
+            sync.onFirstCall().returns(new Promise(() => {
+            }))
+                .onSecondCall().returns(new Promise((resolve) => resolve(true)));
         };
 
         it("should transition to 'NO_DATA' state when there is no data to sync", async () => {
@@ -73,13 +70,50 @@ describe("@SyncService", async () => {
             }
         });
 
-        it("should retry syncing 5 times when sync fails", async () => {
+        it("should retry syncing once and fail", async () => {
+            syncService = new SyncService(new OfflineDataService(), 1);
+            try {
+                stubError("Sync Failed");
+                await syncService.updateState(StateType.ONLINE);
+                expect(true).to.be.false;
+            } catch (e) {
+                expect(syncService.State).to.equal(SyncStatus.DATA);
+                sinon.assert.callCount(sync, 1);
+                expect(e.message).to.equal("Sync Failed");
+            }
+        });
+
+        it("should transition to 'NO_DATA' state after trying sync twice successfully", async () => {
+            try {
+                stubResolveAfterTwoTry("Sync Failed");
+                await syncService.updateState(StateType.ONLINE);
+                expect(true).to.be.false;
+            } catch (e) {
+                expect(syncService.State).to.equal(SyncStatus.NO_DATA);
+                sinon.assert.callCount(sync, 2);
+            }
+        });
+
+
+        it("should stay in 'DATA' state after trying 5 times when sync fails", async () => {
             stubFakes(true, false);
 
             await syncService.updateState(StateType.ONLINE);
 
             expect(syncService.State).to.equal(SyncStatus.DATA);
             sinon.assert.callCount(sync, 5);
+        });
+
+
+        it("should sync successfully even after network interruption", async () => {
+            stubConsecutiveCalls(true);
+
+            syncService.updateState(StateType.ONLINE);
+
+            await syncService.updateState(StateType.OFFLINE);
+
+            await syncService.updateState(StateType.ONLINE);
+            expect(syncService.State).to.equal(SyncStatus.NO_DATA);
         });
     });
 });
