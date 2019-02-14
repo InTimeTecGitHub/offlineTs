@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "node node_modules/nyc/bin/nyc --reporter=text node_modules/mocha/bin/_mocha --require ts-node/register -u tdd --timeout 999999 --colors ./test/*Spec.ts",
-    "build": "./node_modules/.bin/tsc -p tsconfig.prod.json"
+    "build": "node ./node_modules/gulp/bin/gulp tsc-prod"
   },
   "nyc": {
     "extension": [
@@ -28,12 +28,15 @@
     "@types/node": "^10.12.21",
     "@types/sinon": "^7.0.5",
     "browserify": "^16.2.3",
+    "gulp": "^4.0.0",
+    "gulp-typescript": "^5.0.0",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "nyc": "^13.2.0",
     "sinon": "^7.2.3",
     "ts-node": "^8.0.2",
-    "typescript": "^3.3.1"
+    "typescript": "^3.3.1",
+    "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {},
   "keywords": [

@@ -8,8 +8,15 @@ export enum StateType {
 }
 
 export class ServiceStatus {
-    static instance: ServiceStatus;
-    static ping: PingService;
+    private static instance: ServiceStatus;
+    static get Instance() {
+        return this.instance;
+    }
+
+    static set Instance(serviceStatus: ServiceStatus) {
+        this.instance = serviceStatus;
+    }
+    private static ping: PingService;
     private interval: any;
     private state: StateType;
     observers: Map<number, Observer> = new Map<number, any>();
@@ -19,7 +26,9 @@ export class ServiceStatus {
             this.observers.set(observer.ObserverId, observer);
         else throw new Error("ObserverId Not Set.");
     }
-
+    static set Ping(ping: PingService) {
+        ServiceStatus.ping = ping;
+    }
     set State(state: StateType) {
         this.state = state;
         this.notify();
@@ -57,6 +66,7 @@ export class ServiceStatus {
     }
 
     constructor(private period: number = 1000) {
+        this.state = StateType.ONLINE;
         this.interval = setInterval(() => this.callback(), this.period);
     }
 }

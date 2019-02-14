@@ -1,44 +1,47 @@
-var gulp = require("gulp");
+const {series, dest} = require("gulp");
 var ts = require("gulp-typescript");
 var tsProjectProd = ts.createProject("tsconfig.prod.json");
 var source = require('vinyl-source-stream');
 var tsProject = ts.createProject("tsconfig.json");
 var browserify = require("browserify");
-gulp.task("tsc-prod", function () {
+
+function tscProd() {
     console.log("this is the transpilation task for production.");
     console.log("for dev run 'tsc'.");
     return tsProjectProd.src()
         .pipe(tsProject())
-        .pipe(gulp.dest('dist'))
+        .pipe(dest('dist'))
         .once("error", function () {
             this.once("finish", function () {
                 process.exit(1);
             });
         });
-});
+};
 
-gulp.task("tsc", function () {
+function tsc() {
     return tsProject.src()
         .pipe(tsProject())
-        .pipe(gulp.dest('.'))
+        .pipe(dest('.'))
         .once("error", function () {
             this.once("finish", function () {
                 process.exit(1);
             });
         });;
-});
+};
 
-gulp.task("bundle",
-    gulp.series("tsc-prod"),
-    function () {
-        return browserify({
-            basedir: '.',
-            debug: true,
-            entries: ['dist/index.js'],
-            cache: {},
-            packageCache: {},
-        })
-            .bundle()
-            .pipe(source('offlinets.min.js'))
-            .pipe(gulp.dest("public"));
-    });
+function bundle() {
+    return browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['dist/index.js'],
+        cache: {},
+        packageCache: {},
+    })
+        .bundle()
+        .pipe(source('offlinets.js'))
+        .pipe(dest("dist"));
+}
+
+exports.bundle = series(tscProd, bundle);
+exports.tsc = tsc;
+
