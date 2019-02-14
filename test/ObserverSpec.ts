@@ -4,17 +4,19 @@ import {ServiceStatus} from "../src/ServiceStatus";
 import {SampleObserverOne} from "./fixture/SamleObserverOne";
 
 describe("@ObserverStatusForOneClass", () => {
-    afterEach(() => ServiceStatus.instance.cancelInterval());
+    before(() => {
+        ServiceStatus.cancelInterval();
+    });
 
     it("should update the annotated class when service status changes", () => {
         let observer = new SampleObserver();
+        observer.state = 0;
         let initial = observer.state;
 
-        ServiceStatus.instance.goOnline();
+        ServiceStatus.goOnline();
         let result = observer.state;
-        ServiceStatus.instance.goOffline();
+        ServiceStatus.goOffline();
 
-        expect(initial).to.be.equal(0);
         expect(result).to.be.equal(999);
     });
 
@@ -25,34 +27,38 @@ describe("@ObserverStatusForOneClass", () => {
 });
 
 describe("@ObserverStatusForAllClasses", () => {
-    afterEach(async () => ServiceStatus.instance.cancelInterval());
-
+    before(() => {
+        ServiceStatus.cancelInterval();
+    });
     it("should update all annotated classes when service status changes - Two observers from same class", () => {
         let observerOne = new SampleObserver();
+        observerOne.state = 0;
+
         let observerTwo = new SampleObserver();
+        observerTwo.state = 100;
+
         let initialStateOne = observerOne.state;
         let initialStateTwo = observerTwo.state;
 
-        ServiceStatus.instance.goOnline();
+        ServiceStatus.goOnline();
         let resultObserverOne = observerOne.state;
         let resultObserverTwo = observerTwo.state;
-        ServiceStatus.instance.goOffline();
+        ServiceStatus.goOffline();
 
-        expect(initialStateOne).to.be.equal(0);
         expect(resultObserverOne).to.be.equal(999);
-        expect(initialStateTwo).to.be.equal(0);
         expect(resultObserverTwo).to.be.equal(999);
     });
 
     it("should update all annotated classes when service status changes - observer from a different class", () => {
         let newObserver = new SampleObserverOne();
+        newObserver.state = 0;
+
         let initialState = newObserver.state;
 
-        ServiceStatus.instance.goOnline();
-        let resultingState= newObserver.state;
-        ServiceStatus.instance.goOffline();
+        ServiceStatus.goOnline();
+        let resultingState = newObserver.state;
+        ServiceStatus.goOffline();
 
-        expect(initialState).to.be.equal(0);
         expect(resultingState).to.be.equal(99);
     });
 

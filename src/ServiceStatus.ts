@@ -29,16 +29,16 @@ export class ServiceStatus {
         return this.state;
     }
 
-    goOnline() {
-        if (this.State !== StateType.ONLINE) {
-            this.State = StateType.ONLINE;
+    static goOnline() {
+        if (ServiceStatus.instance.State !== StateType.ONLINE) {
+            ServiceStatus.instance.State = StateType.ONLINE;
         }
         return this;
     }
 
-    goOffline() {
-        if (this.State !== StateType.OFFLINE) {
-            this.State = StateType.OFFLINE;
+    static goOffline() {
+        if (ServiceStatus.instance.State !== StateType.OFFLINE) {
+            ServiceStatus.instance.State = StateType.OFFLINE;
         }
         return this;
     }
@@ -48,12 +48,12 @@ export class ServiceStatus {
 
     private async callback() {
         if (!ServiceStatus.ping) return;
-        if (await ServiceStatus.ping.ping()) return this.goOnline();
-        else return this.goOffline();
+        if (await ServiceStatus.ping.ping()) return ServiceStatus.goOnline();
+        else return ServiceStatus.goOffline();
     }
 
-    cancelInterval() {
-        clearInterval(this.interval);
+    static cancelInterval() {
+        clearInterval(ServiceStatus.instance.interval);
     }
 
     constructor(private period: number = 1000) {
