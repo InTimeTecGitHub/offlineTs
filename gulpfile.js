@@ -4,6 +4,7 @@ var tsProjectProd = ts.createProject("tsconfig.prod.json");
 var source = require('vinyl-source-stream');
 var tsProject = ts.createProject("tsconfig.json");
 var browserify = require("browserify");
+
 gulp.task("tsc-prod", function () {
     console.log("this is the transpilation task for production.");
     console.log("for dev run 'tsc'.");

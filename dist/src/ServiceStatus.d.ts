@@ -6,17 +6,19 @@ export declare enum StateType {
 }
 export declare class ServiceStatus {
     private period;
-    static instance: ServiceStatus;
-    static ping: PingService;
+    private static instance;
+    static Instance: ServiceStatus;
+    private static ping;
     private interval;
     private state;
     observers: Map<number, Observer>;
     attach(observer: Observer): void;
+    static Ping: PingService;
     State: StateType;
-    goOnline(): this;
-    goOffline(): this;
+    static goOnline(): typeof ServiceStatus;
+    static goOffline(): typeof ServiceStatus;
     notify(): void;
     private callback;
-    cancelInterval(): void;
+    static cancelInterval(): void;
     constructor(period?: number);
 }

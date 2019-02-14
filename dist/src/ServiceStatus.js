@@ -17,13 +17,23 @@ class ServiceStatus {
     constructor(period = 1000) {
         this.period = period;
         this.observers = new Map();
+        this.state = StateType.ONLINE;
         this.interval = setInterval(() => this.callback(), this.period);
+    }
+    static get Instance() {
+        return this.instance;
+    }
+    static set Instance(serviceStatus) {
+        this.instance = serviceStatus;
     }
     attach(observer) {
         if (observer.ObserverId)
             this.observers.set(observer.ObserverId, observer);
         else
             throw new Error("ObserverId Not Set.");
+    }
+    static set Ping(ping) {
+        ServiceStatus.ping = ping;
     }
     set State(state) {
         this.state = state;
@@ -32,15 +42,15 @@ class ServiceStatus {
     get State() {
         return this.state;
     }
-    goOnline() {
-        if (this.State !== StateType.ONLINE) {
-            this.State = StateType.ONLINE;
+    static goOnline() {
+        if (ServiceStatus.instance.State !== StateType.ONLINE) {
+            ServiceStatus.instance.State = StateType.ONLINE;
         }
         return this;
     }
-    goOffline() {
-        if (this.State !== StateType.OFFLINE) {
-            this.State = StateType.OFFLINE;
+    static goOffline() {
+        if (ServiceStatus.instance.State !== StateType.OFFLINE) {
+            ServiceStatus.instance.State = StateType.OFFLINE;
         }
         return this;
     }
@@ -52,14 +62,13 @@ class ServiceStatus {
             if (!ServiceStatus.ping)
                 return;
             if (yield ServiceStatus.ping.ping())
-                return this.goOnline();
+                return ServiceStatus.goOnline();
             else
-                return this.goOffline();
+                return ServiceStatus.goOffline();
         });
     }
-    cancelInterval() {
-        clearInterval(this.interval);
+    static cancelInterval() {
+        clearInterval(ServiceStatus.instance.interval);
     }
 }
 exports.ServiceStatus = ServiceStatus;
-//# sourceMappingURL=ServiceStatus.js.map

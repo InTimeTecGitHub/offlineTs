@@ -36,4 +36,3 @@ class DefaultPingService {
     }
 }
 exports.defaultPingService = new DefaultPingService();
-//# sourceMappingURL=PingService.js.map
