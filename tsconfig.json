@@ -12,7 +12,8 @@
       "types": [
         "node",
         "chai",
-        "mocha"
+        "mocha",
+        "sinon"
       ],
       "typeRoots": [
         "node_modules/@types"
