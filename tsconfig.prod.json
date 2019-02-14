@@ -27,7 +27,8 @@
   },
   "include": [
     "index.ts",
-    "src"
+    "src",
+    "test"
   ],
   "exclude": [
     "node_modules",

@@ -12,6 +12,12 @@
     "extension": [
       ".ts"
     ],
+    "exclude": [
+      "./**/*.d.ts",
+      "./**/*.js",
+      "./**/*.spec.js",
+      "dist"
+    ],
     "reporter": [
       "html"
     ],
