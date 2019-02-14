@@ -5,8 +5,17 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "node_modules/mocha/bin/_mocha test",
+    "test": "node node_modules/nyc/bin/nyc --reporter=text node_modules/mocha/bin/_mocha --require ts-node/register -u tdd --timeout 999999 --colors ./test/*Spec.ts",
     "build": "./node_modules/.bin/tsc -p tsconfig.prod.json"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "reporter": [
+      "html"
+    ],
+    "all": true
   },
   "author": "Akhil Sasidharan",
   "license": "MIT",
