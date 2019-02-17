@@ -1,15 +1,15 @@
 import {expect} from "chai";
-import {SampleObserver} from "./fixture/SampleObserver";
-import {ServiceStatus, StateType} from "../src/ServiceStatus";
-import {SampleObserverOne} from "./fixture/SamleObserverOne";
-
+import {SampleObserver, serviceStatus} from "./fixture/SampleObserver";
+import {StateType} from "../src/ServiceStatus";
+import {SampleObserverOne} from "./fixture/SampleObserverOne";
 describe("@Observer", () => {
     before(() => {
-        ServiceStatus.cancelInterval();
+        serviceStatus.cancelInterval();
     });
 
+
     it("should set the initial value of ServiceStatus as online", () => {
-        expect(ServiceStatus.Instance.State).to.eq(StateType.ONLINE);
+        expect(serviceStatus.State).to.eq(StateType.ONLINE);
     });
 
     it("should set default value of sample observer as 0", () => {
@@ -22,7 +22,7 @@ describe("@Observer", () => {
         let observer = new SampleObserver();
         observer.state = 0;
 
-        ServiceStatus.goOffline();
+        serviceStatus.goOffline();
 
         expect(observer.state).to.be.equal(999);
     });
@@ -34,8 +34,8 @@ describe("@Observer", () => {
         let observerTwo = new SampleObserver();
         observerTwo.state = 100;
 
-        ServiceStatus.goOnline();
-        ServiceStatus.goOffline();
+        serviceStatus.goOnline();
+        serviceStatus.goOffline();
 
         expect(observerOne.state).to.be.equal(999);
         expect(observerTwo.state).to.be.equal(999);
@@ -45,10 +45,19 @@ describe("@Observer", () => {
         let newObserver = new SampleObserverOne();
         newObserver.state = 0;
 
-        ServiceStatus.goOnline();
-        ServiceStatus.goOffline();
+        serviceStatus.goOnline();
+        serviceStatus.goOffline();
 
         expect(newObserver.state).to.be.equal(99);
+    });
+
+    //TODO: add tests for related scenarios.
+    it("should accept user defined pingservice. ", () => {
+        //create in instance of an observer.
+        //set ping service as a dummy and period=50.
+        //verify updateState has been called once.
+        //verify ping service has been called.
+        //cancelinterval.
     });
 
 });

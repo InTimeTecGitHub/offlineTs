@@ -1,3 +1,4 @@
-export {StateType} from "./src/ServiceStatus";
-export {Observe, ObserveConfig, Observer} from "./src/Observer";
-export {SyncService} from "./src/sync/SyncService";
+export {StateType, ServiceStatus} from "./src/ServiceStatus";
+export {Observer} from "./src/Observer";
+import * as sync from "./src/sync/sync";
+export {sync};

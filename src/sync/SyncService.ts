@@ -1,6 +1,7 @@
-import {StateType} from "./StateType";
-import {Observe} from "../Observer";
+import {StateType} from "../StateType";
 import {OfflineDataService} from "./OfflineDataService";
+import {ServiceStatus} from "../ServiceStatus";
+import {defaultPingService} from "../PingService";
 
 export enum SyncStatus {
     WAITING,
@@ -8,13 +9,15 @@ export enum SyncStatus {
     DATA
 }
 
-@Observe()
+var sss = new ServiceStatus(defaultPingService);
+sss.Observe();
+
 export class SyncService {
     private state: number = SyncStatus.WAITING;
     private isSyncSuccess: boolean;
 
     constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
-                private maxRetry: number = Infinity) {
+        private maxRetry: number = Infinity) {
     }
 
     get State(): number {
@@ -64,10 +67,11 @@ export class SyncService {
                 }
             } catch (ex) {
                 if (retry === this.maxRetry) {
-                    throw(new Error(ex));
+                    throw (new Error(ex));
                 }
             }
         }
     }
 
 }
+export {sss as SyncServiceStatus};
