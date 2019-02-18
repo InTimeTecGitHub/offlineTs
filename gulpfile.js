@@ -4,6 +4,7 @@ var tsProjectProd = ts.createProject("tsconfig.prod.json");
 var source = require('vinyl-source-stream');
 var tsProject = ts.createProject("tsconfig.json");
 var browserify = require("browserify");
+var tsify = require("tsify");
 
 function tscProd() {
     console.log("this is the transpilation task for production.");
@@ -42,6 +43,15 @@ function bundle() {
         .pipe(dest("dist"));
 }
 
+function demo() {
+    return browserify()
+        .add("demo/DemoObserver.ts")
+        .plugin("tsify")
+        .bundle()
+        .pipe(source("DemoObserver.js"))
+        .pipe(dest("demo/public"));
+}
+
 exports.bundle = series(tscProd, bundle);
 exports.tsc = tsc;
-
+exports.demo = demo;

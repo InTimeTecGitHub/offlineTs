@@ -14,18 +14,6 @@ export class ServiceStatus {
     private observers: Map<number, Observer> = new Map<number, any>();
 
     Observe: <T extends {new(...args: any[]): Observer}>(constructor: T) => T;
-    // () {
-    // var serviceStatus = this;
-    // return <T extends {new(...args: any[]): Observer}>(constructor: T) => {
-    //     return class extends constructor {
-    //         ObserverId = Date.now() * Math.random() * 1000;
-    //         constructor(...args: any[]) {
-    //             super(...args);
-    //             serviceStatus.attach(this);
-    //         }
-    //     }
-    // }
-    // }
 
     attach(observer: Observer) {
         if (observer.ObserverId)
