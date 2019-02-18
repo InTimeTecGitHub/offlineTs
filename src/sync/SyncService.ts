@@ -9,7 +9,8 @@ export enum SyncStatus {
     DATA
 }
 
-export var syncServiceStatus = new ServiceStatus(defaultPingService);
+var syncServiceStatus = new ServiceStatus(defaultPingService);
+
 @syncServiceStatus.Observe
 
 export class SyncService {
@@ -17,7 +18,7 @@ export class SyncService {
     private isSyncSuccess: boolean;
 
     constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
-        private maxRetry: number = Infinity) {
+                private maxRetry: number = Infinity) {
     }
 
     get State(): number {
@@ -74,4 +75,5 @@ export class SyncService {
     }
 
 }
+
 export {syncServiceStatus as SyncServiceStatus};

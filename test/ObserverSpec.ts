@@ -4,13 +4,22 @@ import {StateType} from "../src/ServiceStatus";
 import {SampleObserverOne} from "./fixture/SampleObserverOne";
 import {SyncService, SyncServiceStatus} from "../src/sync/SyncService";
 import * as sinon from "sinon";
+import {SinonStub} from "sinon";
 
 
 describe("@Observer", () => {
+    let updateState: SinonStub;
     before(() => {
         serviceStatus.cancelInterval();
     });
 
+    beforeEach(() => {
+        updateState = sinon.stub(SyncService.prototype, "updateState");
+    });
+
+    afterEach(() => {
+        updateState.restore();
+    });
 
     it("should set the initial value of ServiceStatus as online", () => {
         expect(serviceStatus.State).to.eq(StateType.ONLINE);
@@ -32,7 +41,6 @@ describe("@Observer", () => {
     });
 
     it("should call updateState function of syncService observer whenever state changes", () => {
-        let updateState = sinon.stub(SyncService.prototype, "updateState");
         let observer = new SyncService();
 
         SyncServiceStatus.goOffline();
