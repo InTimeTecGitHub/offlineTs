@@ -1,5 +1,6 @@
 import {StateType, ServiceStatus} from "../../src/ServiceStatus";
-class PService {
+
+export class PService {
     async ping() {
         return true;
     }

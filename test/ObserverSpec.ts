@@ -1,11 +1,11 @@
 import {expect} from "chai";
-import {SampleObserver, serviceStatus} from "./fixture/SampleObserver";
+import {SampleObserver, serviceStatus, PService} from "./fixture/SampleObserver";
 import {StateType} from "../src/ServiceStatus";
 import {SampleObserverOne} from "./fixture/SampleObserverOne";
 import {SyncService, SyncServiceStatus} from "../src/sync/SyncService";
 import * as sinon from "sinon";
+import {PingService} from "../src/PingService";
 import {SinonStub} from "sinon";
-
 
 describe("@Observer", () => {
     let updateState: SinonStub;
@@ -73,14 +73,44 @@ describe("@Observer", () => {
         expect(newObserver.state).to.be.equal(99);
     });
 
-    //TODO: add tests for related scenarios.
-    it("should accept user defined pingservice. ", () => {
-        //create in instance of an observer.
-        //set ping service as a dummy and period=50.
-        //verify updateState has been called once.
-        //verify ping service has been called.
-        //cancelinterval.
-        throw new Error("To be implemented.");
-    });
+    describe("@Ping", async () => {
 
+        let observer: any;
+        let pingService: PingService, ping: SinonStub;
+        serviceStatus.cancelInterval();
+
+        before(async () => {
+            //create in instance of an observer.
+            observer = new SampleObserver();
+
+            //setting ping service as a dummy.
+            pingService = new PService();
+            ping = sinon.stub(PService.prototype, "ping");
+        });
+
+        describe("@verifying ping service and ping interval", async () => {
+
+            var stubPingService = (hasPingService: boolean) => {
+                ping.returns(new Promise((resolve => resolve(hasPingService))));
+            };
+
+            it("should accept user defined period - verify UpdateState ", () => {
+
+                //verify updateState has been called once.
+                observer.state = 0;
+                serviceStatus.startPing(50);
+                serviceStatus.goOnline();
+                expect(observer.state).to.be.equal(999);
+            });
+
+            it("should accept user defined pingservice - verify PingService ", async () => {
+
+                //verify ping service has been called.
+                stubPingService(true);
+                var pingObj = await pingService.ping();
+                serviceStatus.goOffline();
+                expect(pingObj).to.equal(true);
+            });
+        });
+    });
 });
