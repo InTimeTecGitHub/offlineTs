@@ -1,10 +1,11 @@
-const {series, dest} = require("gulp");
+const {series, dest, parallel} = require("gulp");
 var ts = require("gulp-typescript");
 var tsProjectProd = ts.createProject("tsconfig.prod.json");
 var source = require('vinyl-source-stream');
 var tsProject = ts.createProject("tsconfig.json");
 var browserify = require("browserify");
-var tsify = require("tsify");
+var uglify = require("gulp-uglifyes");
+var buffer = require("vinyl-buffer");
 
 function tscProd() {
     console.log("this is the transpilation task for production.");
@@ -43,6 +44,25 @@ function bundle() {
         .pipe(dest("dist"));
 }
 
+function bundleMin() {
+    return browserify({
+        basedir: '.',
+        debug: true,
+        entries: ['dist/index.js'],
+        cache: {},
+        packageCache: {},
+    })
+        .bundle()
+        .pipe(source('offlinets.min.js'))
+        .pipe(buffer())
+        .pipe(uglify({
+            mangle: {
+                keep_classnames: true,
+                keep_fnames: true,
+            }
+        }))
+        .pipe(dest("dist"));
+}
 function demo() {
     return browserify()
         .add("demo/DemoObserver.ts")
@@ -52,6 +72,6 @@ function demo() {
         .pipe(dest("demo/public"));
 }
 
-exports.bundle = series(tscProd, bundle);
+exports.bundle = series(tscProd, parallel(bundle, bundleMin));
 exports.tsc = tsc;
 exports.demo = demo;

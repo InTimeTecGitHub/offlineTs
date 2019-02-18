@@ -77,7 +77,6 @@ describe("@Observer", () => {
 
         let observer: any;
         let pingService: PingService, ping: SinonStub;
-        serviceStatus.cancelInterval();
 
         before(async () => {
             //create in instance of an observer.
@@ -94,22 +93,18 @@ describe("@Observer", () => {
                 ping.returns(new Promise((resolve => resolve(hasPingService))));
             };
 
-            it("should accept user defined period - verify UpdateState ", () => {
-
-                //verify updateState has been called once.
-                observer.state = 0;
-                serviceStatus.startPing(50);
-                serviceStatus.goOnline();
-                expect(observer.state).to.be.equal(999);
-            });
-
             it("should accept user defined pingservice - verify PingService ", async () => {
-
-                //verify ping service has been called.
+                observer.state = 0;
                 stubPingService(true);
-                var pingObj = await pingService.ping();
-                serviceStatus.goOffline();
-                expect(pingObj).to.equal(true);
+                serviceStatus.startPing(1);
+                await new Promise(resolve => {
+                    setTimeout(resolve, 10);
+                })
+                //verify ping service has been called.
+                sinon.assert.called(ping);
+                //verify status was updated.
+                expect(observer.state).to.eq(999);
+                serviceStatus.cancelInterval();
             });
         });
     });

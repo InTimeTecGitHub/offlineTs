@@ -5,20 +5,23 @@ export declare enum StateType {
     OFFLINE = 1
 }
 export declare class ServiceStatus {
-    private period;
-    private static instance;
-    static Instance: ServiceStatus;
-    private static ping;
+    private ping;
+    private period?;
     private interval;
     private state;
-    observers: Map<number, Observer>;
+    private observers;
+    Observe: <T extends {
+        new (...args: any[]): Observer;
+    }>(constructor: T) => T;
     attach(observer: Observer): void;
-    static Ping: PingService;
+    Ping: PingService;
+    Period: number;
     State: StateType;
-    static goOnline(): typeof ServiceStatus;
-    static goOffline(): typeof ServiceStatus;
+    goOnline(): this;
+    goOffline(): this;
     notify(): void;
     private callback;
-    static cancelInterval(): void;
-    constructor(period?: number);
+    cancelInterval(): void;
+    startPing(period: number): void;
+    constructor(ping: PingService);
 }

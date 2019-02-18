@@ -13,7 +13,7 @@ class DefaultPingService {
         return __awaiter(this, void 0, void 0, function* () {
             return new Promise((resolve) => {
                 fetch(new Request("/favico.ico?_=" + new Date().getTime()), {
-                    method: "GET",
+                    method: "HEAD",
                     headers: new Headers({
                         "Accept": "application/json",
                         "Content-Type": "application/json"
