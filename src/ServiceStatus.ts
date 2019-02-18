@@ -13,18 +13,19 @@ export class ServiceStatus {
     private state: StateType;
     private observers: Map<number, Observer> = new Map<number, any>();
 
-    Observe() {
-        var serviceStatus = this;
-        return function <T extends {new(...args: any[]): Observer}>(constructor: T) {
-            return class extends constructor {
-                ObserverId = Date.now() * Math.random() * 1000;
-                constructor(...args: any[]) {
-                    super(...args);
-                    serviceStatus.attach(this);
-                }
-            }
-        }
-    }
+    Observe: <T extends {new(...args: any[]): Observer}>(constructor: T) => T;
+    // () {
+    // var serviceStatus = this;
+    // return <T extends {new(...args: any[]): Observer}>(constructor: T) => {
+    //     return class extends constructor {
+    //         ObserverId = Date.now() * Math.random() * 1000;
+    //         constructor(...args: any[]) {
+    //             super(...args);
+    //             serviceStatus.attach(this);
+    //         }
+    //     }
+    // }
+    // }
 
     attach(observer: Observer) {
         if (observer.ObserverId)
@@ -86,5 +87,15 @@ export class ServiceStatus {
 
     constructor(private ping: PingService) {
         this.state = StateType.ONLINE;
+        this.Observe = <T extends {new(...args: any[]): Observer}>(constructor: T) => {
+            var serviceStatus = this;
+            return class extends constructor {
+                ObserverId = Date.now() * Math.random() * 1000;
+                constructor(...args: any[]) {
+                    super(...args);
+                    serviceStatus.attach(this);
+                }
+            }
+        };
     }
 }

@@ -5,7 +5,7 @@ class PService {
     }
 }
 export var serviceStatus = new ServiceStatus(new PService());
-@serviceStatus.Observe()
+@serviceStatus.Observe
 export class SampleObserver {
     state: number = 0;
     async updateState(state: StateType) {

@@ -9,8 +9,8 @@ export enum SyncStatus {
     DATA
 }
 
-var sss = new ServiceStatus(defaultPingService);
-sss.Observe();
+var syncServiceStatus = new ServiceStatus(defaultPingService);
+@syncServiceStatus.Observe
 
 export class SyncService {
     private state: number = SyncStatus.WAITING;
@@ -74,4 +74,4 @@ export class SyncService {
     }
 
 }
-export {sss as SyncServiceStatus};
+export {syncServiceStatus as SyncServiceStatus};

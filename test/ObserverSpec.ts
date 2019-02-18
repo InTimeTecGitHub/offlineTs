@@ -58,6 +58,7 @@ describe("@Observer", () => {
         //verify updateState has been called once.
         //verify ping service has been called.
         //cancelinterval.
+        throw new Error("To be implemented.");
     });
 
 });
