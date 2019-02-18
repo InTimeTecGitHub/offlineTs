@@ -16,7 +16,7 @@ function tscProd() {
                 process.exit(1);
             });
         });
-};
+}
 
 function tsc() {
     return tsProject.src()
@@ -26,8 +26,8 @@ function tsc() {
             this.once("finish", function () {
                 process.exit(1);
             });
-        });;
-};
+        });
+}
 
 function bundle() {
     return browserify({

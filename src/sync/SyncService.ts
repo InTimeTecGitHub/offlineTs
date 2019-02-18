@@ -9,7 +9,7 @@ export enum SyncStatus {
     DATA
 }
 
-var syncServiceStatus = new ServiceStatus(defaultPingService);
+export var syncServiceStatus = new ServiceStatus(defaultPingService);
 @syncServiceStatus.Observe
 
 export class SyncService {

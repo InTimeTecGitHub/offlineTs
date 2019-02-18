@@ -2,6 +2,10 @@ import {expect} from "chai";
 import {SampleObserver, serviceStatus} from "./fixture/SampleObserver";
 import {StateType} from "../src/ServiceStatus";
 import {SampleObserverOne} from "./fixture/SampleObserverOne";
+import {SyncService, SyncServiceStatus} from "../src/sync/SyncService";
+import * as sinon from "sinon";
+
+
 describe("@Observer", () => {
     before(() => {
         serviceStatus.cancelInterval();
@@ -25,6 +29,16 @@ describe("@Observer", () => {
         serviceStatus.goOffline();
 
         expect(observer.state).to.be.equal(999);
+    });
+
+    it("should call updateState function of syncService observer whenever state changes", () => {
+        let updateState = sinon.stub(SyncService.prototype, "updateState");
+        let observer = new SyncService();
+
+        SyncServiceStatus.goOffline();
+        sinon.assert.calledWith(updateState, StateType.OFFLINE);
+        SyncServiceStatus.goOnline();
+        sinon.assert.calledWith(updateState, StateType.ONLINE);
     });
 
     it("should update all annotated classes when service status changes - Two observers from same class", () => {
