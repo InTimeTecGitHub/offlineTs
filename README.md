@@ -36,6 +36,29 @@ Start the period ping by calling:
 serviceStatus.startPing(1500);// 1500 ms interval period.
 ```
 
+##Sync Service
+This service can be used to synchronize local data with remote server
+
+####Basic Usage
+```ts
+import {SyncService} from "sync";
+let syncService = new SyncService(new OfflineDataService(), maxRetry);
+```
+
+#####OfflineDataService interface:
+```ts
+interface OfflineDataService {
+    sync(): Promise<boolean> {
+    }
+
+    hasData(): Promise<boolean> {
+    }
+}
+```
+#####maxRetry
+Set this value to allow number of retries when sync fails.
+by default its set to **Infinity**
+
 ## Usage (version 1)
 Define any class that should be notified and updated when the state of service changes.
 The class should have a member updateState(state: StateType)

@@ -99,7 +99,7 @@ describe("@Observer", () => {
                 serviceStatus.startPing(1);
                 await new Promise(resolve => {
                     setTimeout(resolve, 10);
-                })
+                });
                 //verify ping service has been called.
                 sinon.assert.called(ping);
                 //verify status was updated.

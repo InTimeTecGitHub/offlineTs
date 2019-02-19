@@ -15,7 +15,6 @@ var syncServiceStatus = new ServiceStatus(defaultPingService);
 
 export class SyncService {
     private state: number = SyncStatus.WAITING;
-    private isSyncSuccess: boolean;
 
     constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
                 private maxRetry: number = Infinity) {
@@ -54,14 +53,15 @@ export class SyncService {
 
     private async transitionToDataState() {
         let retry: number = 0;
-        while (!this.isSyncSuccess) {
+        let isSyncSuccess: boolean = false;
+        while (!isSyncSuccess) {
             try {
                 retry++;
                 this.State = SyncStatus.DATA;
 
-                this.isSyncSuccess = await this.offlineDataService.sync();
+                isSyncSuccess = await this.offlineDataService.sync();
 
-                if (this.isSyncSuccess) {
+                if (isSyncSuccess) {
                     this.transitionToNoDataState();
                 } else if (retry === this.maxRetry) {
                     return;
