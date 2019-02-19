@@ -1,5 +1,5 @@
 # offlinets
-offlinets will check service availability by pinging it.
+offlinets will check availability of a service by pinging it.
 
 ## Version 2
 ## Usage
@@ -10,7 +10,7 @@ Create an instance of ServiceStatus like:
 let serviceStatus = new ServiceStatus(new PingService());
 ```
 ServiceStatus mandatorily takes a PingService as argument.
-
+PingService.ping() will be called to check service avilability.
 PingService interface looks like this:
 ```ts
 interface PingService {
@@ -37,7 +37,7 @@ serviceStatus.startPing(1500);// 1500 ms interval period.
 ```
 
 ##Sync Service
-This service can be used to synchronize local data with remote server
+Version 2 provides a service can be used to synchronize local data with remote server
 
 ####Basic Usage
 ```ts
@@ -48,9 +48,13 @@ let syncService = new SyncService(new OfflineDataService(), maxRetry);
 #####OfflineDataService interface:
 ```ts
 interface OfflineDataService {
+    //implementation should sync data and return true for success.
+    //false for everything else.
     sync(): Promise<boolean> {
     }
 
+    //implement this to check if data exists, 
+    //it would be good if this check was fast.
     hasData(): Promise<boolean> {
     }
 }
