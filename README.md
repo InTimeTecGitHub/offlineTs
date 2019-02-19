@@ -38,16 +38,16 @@ Start the period ping by calling:
 serviceStatus.startPing(1500);// 1500 ms interval period.
 ```
 
-##Sync Service
+## Sync Service
 Version 2 provides a service can be used to synchronize local data with remote server
 
-####Basic Usage
+#### Basic Usage
 ```ts
 import {SyncService} from "sync";
 let syncService = new SyncService(new OfflineDataService(), maxRetry);
 ```
 
-#####OfflineDataService interface:
+##### OfflineDataService interface:
 ```ts
 interface OfflineDataService {
     //implementation should sync data and return true for success.
@@ -61,7 +61,7 @@ interface OfflineDataService {
     }
 }
 ```
-#####maxRetry
+##### maxRetry
 Set this value to allow number of retries when sync fails.
 by default its set to **Infinity**
 
