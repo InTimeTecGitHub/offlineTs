@@ -1,5 +1,7 @@
 # offlinets
 offlinets will check availability of a service by pinging it.
+An example would be to detect the internet availability in the browser.
+run `npm run demo` and open http://localhost:3000 to see this in action.
 
 ## Version 2
 ## Usage
