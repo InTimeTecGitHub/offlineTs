@@ -1,6 +1,6 @@
 {
   "name": "offlinets",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "ping a service to check if it is up",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,6 +20,10 @@
       "html"
     ],
     "all": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/InTimeTecGitHub/offlineTs"
   },
   "author": "Akhil Sasidharan",
   "license": "MIT",
