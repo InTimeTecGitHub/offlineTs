@@ -6,7 +6,8 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "node node_modules/nyc/bin/nyc --reporter=text node_modules/mocha/bin/_mocha --require ts-node/register -u tdd --timeout 999999 --colors ./test/*Spec.ts",
-    "build": "node ./node_modules/gulp/bin/gulp tsc-prod"
+    "build": "node ./node_modules/gulp/bin/gulp bundle",
+    "demo": "gulp demo && ts-node ./demo/Server.ts"
   },
   "nyc": {
     "extension": [
@@ -28,18 +29,24 @@
   "license": "MIT",
   "devDependencies": {
     "@types/chai": "^4.1.7",
+    "@types/express": "^4.16.1",
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.21",
     "@types/sinon": "^7.0.5",
+    "body-parser": "^1.18.3",
     "browserify": "^16.2.3",
+    "chai": "^4.2.0",
+    "express": "^4.16.4",
     "gulp": "^4.0.0",
     "gulp-typescript": "^5.0.0",
-    "chai": "^4.2.0",
+    "gulp-uglifyes": "^0.2.1",
     "mocha": "^5.2.0",
-    "nyc": "^13.2.0",
+    "nyc": "^13.3.0",
     "sinon": "^7.2.3",
     "ts-node": "^8.0.2",
-    "typescript": "^3.3.1",
+    "tsify": "^4.0.1",
+    "typescript": "^3.3.3",
+    "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {},

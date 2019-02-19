@@ -1,14 +1,14 @@
 import {expect} from "chai";
 import * as sinon from "sinon";
 import {SinonStub} from "sinon";
-import {SyncService, SyncStatus} from "../src/sync/SyncService";
-import {StateType} from "../src/sync/StateType";
+import {SyncService, SyncStatus, SyncServiceStatus} from "../src/sync/SyncService";
+import {StateType} from "../src/StateType";
 import {OfflineDataService} from "../src/sync/OfflineDataService";
 
 describe("@SyncService", async () => {
     let syncService: SyncService, hasData: SinonStub, sync: SinonStub;
     const MAX_SYNC_RETRY: number = 5;
-
+    SyncServiceStatus.cancelInterval();
     beforeEach(async () => {
         syncService = new SyncService(new OfflineDataService(), MAX_SYNC_RETRY);
         hasData = sinon.stub(OfflineDataService.prototype, "hasData");
@@ -20,6 +20,7 @@ describe("@SyncService", async () => {
         sync.restore();
     });
 
+    //TODO: add one test that ensures, updatestate is called when service goOnline/goOffline is called.
     describe("UpdateState", async () => {
         var stubFakes = (hasDataReturnValue: boolean, syncServiceReturnValue: boolean) => {
             hasData.returns(new Promise((resolve) => resolve(hasDataReturnValue)));

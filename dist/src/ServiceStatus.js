@@ -14,17 +14,20 @@ var StateType;
     StateType[StateType["OFFLINE"] = 1] = "OFFLINE";
 })(StateType = exports.StateType || (exports.StateType = {}));
 class ServiceStatus {
-    constructor(period = 1000) {
-        this.period = period;
+    constructor(ping) {
+        this.ping = ping;
         this.observers = new Map();
         this.state = StateType.ONLINE;
-        this.interval = setInterval(() => this.callback(), this.period);
-    }
-    static get Instance() {
-        return this.instance;
-    }
-    static set Instance(serviceStatus) {
-        this.instance = serviceStatus;
+        this.Observe = (constructor) => {
+            var serviceStatus = this;
+            return class extends constructor {
+                constructor(...args) {
+                    super(...args);
+                    this.ObserverId = Date.now() * Math.random() * 1000;
+                    serviceStatus.attach(this);
+                }
+            };
+        };
     }
     attach(observer) {
         if (observer.ObserverId)
@@ -32,8 +35,13 @@ class ServiceStatus {
         else
             throw new Error("ObserverId Not Set.");
     }
-    static set Ping(ping) {
-        ServiceStatus.ping = ping;
+    set Ping(ping) {
+        this.ping = ping;
+    }
+    set Period(period) {
+        this.cancelInterval();
+        this.period = period;
+        this.interval = setInterval(() => this.callback(), this.period);
     }
     set State(state) {
         this.state = state;
@@ -42,15 +50,15 @@ class ServiceStatus {
     get State() {
         return this.state;
     }
-    static goOnline() {
-        if (ServiceStatus.instance.State !== StateType.ONLINE) {
-            ServiceStatus.instance.State = StateType.ONLINE;
+    goOnline() {
+        if (this.State !== StateType.ONLINE) {
+            this.State = StateType.ONLINE;
         }
         return this;
     }
-    static goOffline() {
-        if (ServiceStatus.instance.State !== StateType.OFFLINE) {
-            ServiceStatus.instance.State = StateType.OFFLINE;
+    goOffline() {
+        if (this.State !== StateType.OFFLINE) {
+            this.State = StateType.OFFLINE;
         }
         return this;
     }
@@ -59,16 +67,23 @@ class ServiceStatus {
     }
     callback() {
         return __awaiter(this, void 0, void 0, function* () {
-            if (!ServiceStatus.ping)
+            if (!this.ping)
                 return;
-            if (yield ServiceStatus.ping.ping())
-                return ServiceStatus.goOnline();
+            if (yield this.ping.ping())
+                return this.goOnline();
             else
-                return ServiceStatus.goOffline();
+                return this.goOffline();
         });
     }
-    static cancelInterval() {
-        clearInterval(ServiceStatus.instance.interval);
+    cancelInterval() {
+        this.interval && (clearInterval(this.interval));
+    }
+    startPing(period) {
+        if (!period)
+            throw new Error("Cannot start ping without interval time.");
+        if (!this.ping)
+            throw new Error("No Ping service set.");
+        this.Period = period;
     }
 }
 exports.ServiceStatus = ServiceStatus;
