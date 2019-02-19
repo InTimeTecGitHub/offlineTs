@@ -20,6 +20,10 @@
     ],
     "all": true
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/InTimeTecGitHub/offlineTs"
+  },
   "author": "Akhil Sasidharan",
   "license": "MIT",
   "devDependencies": {
