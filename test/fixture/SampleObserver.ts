@@ -1,14 +1,12 @@
-import {Observe} from "../../src/Observer";
-import {StateType} from "../../src/ServiceStatus";
-class PService {
+import {StateType, ServiceStatus} from "../../src/ServiceStatus";
+
+export class PService {
     async ping() {
         return true;
     }
 }
-@Observe({
-    period: 1000,
-    pingService: new PService()
-})
+export var serviceStatus = new ServiceStatus(new PService());
+@serviceStatus.Observe
 export class SampleObserver {
     state: number = 0;
     async updateState(state: StateType) {

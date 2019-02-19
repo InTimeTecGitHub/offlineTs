@@ -1,14 +1,14 @@
-
 export interface PingService {
     ping: () => Promise<boolean>;
 }
+
 class DefaultPingService implements PingService {
     async ping() {
         return new Promise<boolean>((resolve) => {
             fetch(
                 new Request("/favico.ico?_=" + new Date().getTime()),
                 {
-                    method: "GET",
+                    method: "HEAD",
                     headers: new Headers({
                         "Accept": "application/json",
                         "Content-Type": "application/json"

@@ -1,6 +1,7 @@
-import {StateType} from "./StateType";
-import {Observe} from "../Observer";
+import {StateType} from "../StateType";
 import {OfflineDataService} from "./OfflineDataService";
+import {ServiceStatus} from "../ServiceStatus";
+import {defaultPingService} from "../PingService";
 
 export enum SyncStatus {
     WAITING,
@@ -8,10 +9,12 @@ export enum SyncStatus {
     DATA
 }
 
-@Observe()
+var syncServiceStatus = new ServiceStatus(defaultPingService);
+
+@syncServiceStatus.Observe
+
 export class SyncService {
     private state: number = SyncStatus.WAITING;
-    private isSyncSuccess: boolean;
 
     constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
                 private maxRetry: number = Infinity) {
@@ -50,24 +53,27 @@ export class SyncService {
 
     private async transitionToDataState() {
         let retry: number = 0;
-        while (!this.isSyncSuccess) {
+        let isSyncSuccess: boolean = false;
+        while (!isSyncSuccess) {
             try {
                 retry++;
                 this.State = SyncStatus.DATA;
 
-                this.isSyncSuccess = await this.offlineDataService.sync();
+                isSyncSuccess = await this.offlineDataService.sync();
 
-                if (this.isSyncSuccess) {
+                if (isSyncSuccess) {
                     this.transitionToNoDataState();
                 } else if (retry === this.maxRetry) {
                     return;
                 }
             } catch (ex) {
                 if (retry === this.maxRetry) {
-                    throw(new Error(ex));
+                    throw (new Error(ex));
                 }
             }
         }
     }
 
 }
+
+export {syncServiceStatus as SyncServiceStatus};

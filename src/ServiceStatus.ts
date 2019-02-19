@@ -8,27 +8,29 @@ export enum StateType {
 }
 
 export class ServiceStatus {
-    private static instance: ServiceStatus;
-    static get Instance() {
-        return this.instance;
-    }
-
-    static set Instance(serviceStatus: ServiceStatus) {
-        this.instance = serviceStatus;
-    }
-    private static ping: PingService;
+    private period?: number;
     private interval: any;
     private state: StateType;
-    observers: Map<number, Observer> = new Map<number, any>();
+    private observers: Map<number, Observer> = new Map<number, any>();
+
+    Observe: <T extends {new(...args: any[]): Observer}>(constructor: T) => T;
 
     attach(observer: Observer) {
         if (observer.ObserverId)
             this.observers.set(observer.ObserverId, observer);
         else throw new Error("ObserverId Not Set.");
     }
-    static set Ping(ping: PingService) {
-        ServiceStatus.ping = ping;
+
+    set Ping(ping: PingService) {
+        this.ping = ping;
     }
+
+    set Period(period: number) {
+        this.cancelInterval();
+        this.period = period;
+        this.interval = setInterval(() => this.callback(), this.period);
+    }
+
     set State(state: StateType) {
         this.state = state;
         this.notify();
@@ -38,16 +40,16 @@ export class ServiceStatus {
         return this.state;
     }
 
-    static goOnline() {
-        if (ServiceStatus.instance.State !== StateType.ONLINE) {
-            ServiceStatus.instance.State = StateType.ONLINE;
+    goOnline() {
+        if (this.State !== StateType.ONLINE) {
+            this.State = StateType.ONLINE;
         }
         return this;
     }
 
-    static goOffline() {
-        if (ServiceStatus.instance.State !== StateType.OFFLINE) {
-            ServiceStatus.instance.State = StateType.OFFLINE;
+    goOffline() {
+        if (this.State !== StateType.OFFLINE) {
+            this.State = StateType.OFFLINE;
         }
         return this;
     }
@@ -56,17 +58,32 @@ export class ServiceStatus {
     }
 
     private async callback() {
-        if (!ServiceStatus.ping) return;
-        if (await ServiceStatus.ping.ping()) return ServiceStatus.goOnline();
-        else return ServiceStatus.goOffline();
+        if (!this.ping) return;
+        if (await this.ping.ping()) return this.goOnline();
+        else return this.goOffline();
     }
 
-    static cancelInterval() {
-        clearInterval(ServiceStatus.instance.interval);
+    cancelInterval() {
+        this.interval && (clearInterval(this.interval));
     }
 
-    constructor(private period: number = 1000) {
+    startPing(period: number) {
+        if (!period) throw new Error("Cannot start ping without interval time.");
+        if (!this.ping) throw new Error("No Ping service set.");
+        this.Period = period;
+    }
+
+    constructor(private ping: PingService) {
         this.state = StateType.ONLINE;
-        this.interval = setInterval(() => this.callback(), this.period);
+        this.Observe = <T extends {new(...args: any[]): Observer}>(constructor: T) => {
+            var serviceStatus = this;
+            return class extends constructor {
+                ObserverId = Date.now() * Math.random() * 1000;
+                constructor(...args: any[]) {
+                    super(...args);
+                    serviceStatus.attach(this);
+                }
+            }
+        };
     }
 }
