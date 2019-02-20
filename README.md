@@ -130,4 +130,4 @@ concerns. We will do our best to respond in a timely manner.
 [![IntimeTec](https://github.com/InTimeTecGitHub/)](https://github.com/InTimeTecGitHub/)
 [![Syed Fayaz](https://github.com/SyedFayaz)](https://github.com/SyedFayaz)
 [![Nandita Khemnani](https://github.com/Nandita-Khemnani)](https://github.com/Nandita-Khemnani)
-[![Akhil S](https://github.com/sasidakh)](https://github.com/sasidakh)
+[![Akhil Sasidharan](https://github.com/sasidakh)](https://github.com/sasidakh)
