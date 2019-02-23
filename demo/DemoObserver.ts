@@ -23,6 +23,5 @@ class DemoObserver {
     }
 }
 
-var demo = new DemoObserver();
+export var demo = new DemoObserver();
 serviceStatus.startPing(1000);
-console.log(demo);
