@@ -8,10 +8,8 @@ var uglify = require("gulp-uglifyes");
 var buffer = require("vinyl-buffer");
 
 function tscProd() {
-    console.log("this is the transpilation task for production.");
-    console.log("for dev run 'tsc'.");
     return tsProjectProd.src()
-        .pipe(tsProject())
+        .pipe(tsProjectProd())
         .pipe(dest('dist'))
         .once("error", function () {
             this.once("finish", function () {
@@ -33,27 +31,23 @@ function tsc() {
 
 function bundle() {
     return browserify({
-        basedir: '.',
-        debug: true,
-        entries: ['dist/index.js'],
-        cache: {},
-        packageCache: {},
+        standalone: "OfflineTs"
     })
+        .add("index.ts")
+        .plugin("tsify")
         .bundle()
-        .pipe(source('offlinets.js'))
+        .pipe(source("offlinets.js"))
         .pipe(dest("dist"));
 }
 
 function bundleMin() {
     return browserify({
-        basedir: '.',
-        debug: true,
-        entries: ['dist/index.js'],
-        cache: {},
-        packageCache: {},
+        standalone: "OfflineTs"
     })
+        .add("index.ts")
+        .plugin("tsify")
         .bundle()
-        .pipe(source('offlinets.min.js'))
+        .pipe(source("offlinets.min.js"))
         .pipe(buffer())
         .pipe(uglify({
             mangle: {
@@ -72,6 +66,6 @@ function demo() {
         .pipe(dest("demo/public"));
 }
 
-exports.bundle = series(tscProd, parallel(bundle, bundleMin));
+exports.build = series(tscProd, parallel(bundle, bundleMin));
 exports.tsc = tsc;
 exports.demo = demo;
