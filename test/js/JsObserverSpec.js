@@ -1,15 +1,25 @@
+var defaultPingService = require("../../dist/src/PingService");
+
 var expect = require("chai"),
-    testObserver, serviceStatus = require("../fixture/TestObserver"),
-    StateType = require("../../src/ServiceStatus"),
-    TestObserverOne = require( "./fixture/TestObserverOne"),
-    PingService= require( "../../src/PingService"),
-    PService = require( "../fixture/TestObserver"),
-    SinonStub = require("sinon");
+    TestObserver, serviceStatus, PService = require("../fixture/TestObserver"),
+    ServiceStatus = require("../../dist/src/ServiceStatus").ServiceStatus,
+    TestObserverOne = require( "../fixture/TestObserverOne"),
+    PingService= require( "../../dist/src/PingService").defaultPingService,
+  // PService = require( "../fixture/TestObserver"),
+    SinonStub = require("sinon"),
+    sinon = require("sinon");
 
 
 describe("Observer", ()=>{
+
     before(() => {
+
+        serviceStatus = new ServiceStatus(new Ping);
+
         serviceStatus.cancelInterval();
+        serviceStatus.observe(
+            TestObserver
+        )
     });
 
     it("should set value of the ServiceStatus as Online initially", () => {

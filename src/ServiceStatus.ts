@@ -77,7 +77,7 @@ export class ServiceStatus {
         this.Period = period;
     }
 
-    constructor(private ping: PingService) {
+    constructor(public ping: PingService) {
         this.state = StateType.ONLINE;
         this.Observe = <T extends {new(...args: any[]): Observer}>(constructor: T) => {
             var serviceStatus = this;

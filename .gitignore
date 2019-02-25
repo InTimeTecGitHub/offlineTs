@@ -9,5 +9,6 @@ node_modules
 !gulpfile.js
 !dist/*
 !dist/**/*
+!test/js/**
 .nyc_output/*
 coverage/*
