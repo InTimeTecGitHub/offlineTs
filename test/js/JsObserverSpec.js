@@ -1,10 +1,11 @@
-var chai = require("chai");
-var TestObserver, serviceStatus = require("../fixture/TestObserver");
-var StateType = require("../../src/ServiceStatus");
-var TestObserverOne = require( "./fixture/TestObserverOne");
-var PingService= require( "../../src/PingService");
-var SinonStub = require("sinon");
-var PService = require( "../fixture/TestObserver");
+var expect = require("chai"),
+    testObserver, serviceStatus = require("../fixture/TestObserver"),
+    StateType = require("../../src/ServiceStatus"),
+    TestObserverOne = require( "./fixture/TestObserverOne"),
+    PingService= require( "../../src/PingService"),
+    PService = require( "../fixture/TestObserver"),
+    SinonStub = require("sinon");
+
 
 describe("Observer", ()=>{
     before(() => {
@@ -42,8 +43,7 @@ describe("Observer", ()=>{
     });
     describe("Ping", async () => {
 
-        var observer;
-        var pingService, ping;
+        var observer, pingService, ping;
 
         before(async () => {
             //create in instance of an observer.
@@ -54,12 +54,26 @@ describe("Observer", ()=>{
             ping = sinon.stub(PService.prototype, "ping");
         });
 
-       /* describe("@verifying ping service", async () => {
+        describe("@verifying ping service", async () => {
+
+            var stubPingService = (hasPingService) => {
+                ping.returns(new Promise((resolve => resolve(hasPingService))));
+            };
 
             it("should accept user defined pingservice", async () => {
-
+                observer.state = 0;
+                stubPingService(true);
+                serviceStatus.startPing(1);
+                await new Promise(resolve => {
+                    setTimeout(resolve, 10);
+                });
+                //verify ping service has been called.
+                sinon.assert.called(ping);
+                //verify status was updated.
+                expect(observer.state).to.eq(999);
+                serviceStatus.cancelInterval();
             });
-        });*/
+        });
     });
 
 });
