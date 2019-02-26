@@ -29,6 +29,9 @@ class ServiceStatus {
             };
         };
     }
+    observe(funct) {
+        funct = this.Observe(funct);
+    }
     attach(observer) {
         if (observer.ObserverId)
             this.observers.set(observer.ObserverId, observer);

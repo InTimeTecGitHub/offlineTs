@@ -1,11 +1,9 @@
-var defaultPingService = require("../../dist/src/PingService"),
-    chai = require('chai'),
+var chai = require('chai'),
     expect = chai.expect,
     TestObserver = require("../fixture/TestObserver").TestObserver,
-    serviceStatus, PService = require("../fixture/TestObserver"),
-    ServiceStatus = require("../../dist/src/ServiceStatus").ServiceStatus,
-    TestObserverOne = require( "../fixture/TestObserverOne"),
-    PingService= require( "../../dist/src/PingService").defaultPingService,
+    PService = require("../fixture/TestObserver").PService,
+    serviceStatus = require("../fixture/TestObserver").serviceStatus,
+    TestObserverOne = require( "../fixture/TestObserverOne").TestObserverOne,
     StateType = require("../../dist/src/ServiceStatus").StateType,
     SinonStub = require("sinon"),
     sinon = require("sinon");
@@ -15,17 +13,8 @@ describe("Observer", ()=>{
 
     before(() => {
 
-        serviceStatus = new ServiceStatus(PingService);
-
+        //serviceStatus = new ServiceStatus(PingService);
         serviceStatus.cancelInterval();
-
-        serviceStatus.observe(
-            TestObserver
-        )
-
-        serviceStatus.observe(
-            TestObserverOne
-        )
     });
 
     it("should set value of the ServiceStatus as Online initially", () => {
@@ -41,9 +30,7 @@ describe("Observer", ()=>{
     it("should update the annotated class when service status changes", () => {
         var observer = new TestObserver();
         observer.state = 0;
-        //console.log(observer);
         serviceStatus.goOffline();
-
         expect(observer.state).to.be.equal(999);
     });
     it("should update all annotated classes when service status changes - Two observers from same class", () => {
@@ -61,7 +48,7 @@ describe("Observer", ()=>{
         var newObserver = new TestObserverOne();
         newObserver.state = 0;
 
-        serviceStatus.goOnline();
+        //serviceStatus.goOnline();
         serviceStatus.goOffline();
 
         expect(newObserver.state).to.be.equal(999);
@@ -71,9 +58,7 @@ describe("Observer", ()=>{
         var observer, pingService, ping;
 
         before(async () => {
-            serviceStatus.observe(
-                TestObserver
-            )
+
             //create in instance of an observer.
             observer = new TestObserver();
 
