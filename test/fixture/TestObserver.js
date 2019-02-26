@@ -19,7 +19,6 @@ serviceStatus.observe(
     TestObserver
 )
 */
-
 exports.TestObserver = TestObserver;
 exports.serviceStatus = serviceStatus;
 exports.PService = PService;

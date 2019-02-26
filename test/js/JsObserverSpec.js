@@ -13,7 +13,6 @@ describe("Observer", ()=>{
 
     before(() => {
 
-        //serviceStatus = new ServiceStatus(PingService);
         serviceStatus.cancelInterval();
     });
 
@@ -33,25 +32,28 @@ describe("Observer", ()=>{
         serviceStatus.goOffline();
         expect(observer.state).to.be.equal(999);
     });
+
     it("should update all annotated classes when service status changes - Two observers from same class", () => {
         var observerOne = new TestObserver();
         observerOne.state = 0;
         var observerTwo = new TestObserver();
         observerTwo.state = 100;
-        //serviceStatus.goOnline();
+
+        serviceStatus.goOnline();
         serviceStatus.goOffline();
 
         expect(observerOne.state).to.be.equal(999);
         expect(observerTwo.state).to.be.equal(999);
     });
+
     it("should update all annotated classes when service status changes - observer from a different class", () => {
-        var newObserver = new TestObserverOne();
+        let newObserver = new TestObserverOne();
         newObserver.state = 0;
 
-        //serviceStatus.goOnline();
+        serviceStatus.goOnline();
         serviceStatus.goOffline();
 
-        expect(newObserver.state).to.be.equal(999);
+        expect(newObserver.state).to.be.equal(99);
     });
     describe("Ping", async () => {
 
