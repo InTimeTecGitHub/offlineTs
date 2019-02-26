@@ -1,11 +1,12 @@
-var defaultPingService = require("../../dist/src/PingService");
-
-var expect = require("chai"),
-    TestObserver, serviceStatus, PService = require("../fixture/TestObserver"),
+var defaultPingService = require("../../dist/src/PingService"),
+    chai = require('chai'),
+    expect = chai.expect,
+    TestObserver = require("../fixture/TestObserver").TestObserver,
+    serviceStatus, PService = require("../fixture/TestObserver"),
     ServiceStatus = require("../../dist/src/ServiceStatus").ServiceStatus,
     TestObserverOne = require( "../fixture/TestObserverOne"),
     PingService= require( "../../dist/src/PingService").defaultPingService,
-  // PService = require( "../fixture/TestObserver"),
+    StateType = require("../../dist/src/ServiceStatus").StateType,
     SinonStub = require("sinon"),
     sinon = require("sinon");
 
@@ -14,11 +15,16 @@ describe("Observer", ()=>{
 
     before(() => {
 
-        serviceStatus = new ServiceStatus(new Ping);
+        serviceStatus = new ServiceStatus(PingService);
 
         serviceStatus.cancelInterval();
+
         serviceStatus.observe(
             TestObserver
+        )
+
+        serviceStatus.observe(
+            TestObserverOne
         )
     });
 
@@ -28,34 +34,46 @@ describe("Observer", ()=>{
 
     it("should set default value of sample observer as 0", () => {
         var observer = new TestObserver();
+
         expect(observer.state).to.be.equal(0);
     });
+
     it("should update the annotated class when service status changes", () => {
         var observer = new TestObserver();
         observer.state = 0;
+        //console.log(observer);
         serviceStatus.goOffline();
-        expect(observer.state).to.be.equal(1);
+
+        expect(observer.state).to.be.equal(999);
     });
     it("should update all annotated classes when service status changes - Two observers from same class", () => {
         var observerOne = new TestObserver();
         observerOne.state = 0;
         var observerTwo = new TestObserver();
-        observerTwo.state = 2;
-        expect(observerOne.state).to.be.equal(1);
-        expect(observerTwo.state).to.be.equal(1);
+        observerTwo.state = 100;
+        //serviceStatus.goOnline();
+        serviceStatus.goOffline();
+
+        expect(observerOne.state).to.be.equal(999);
+        expect(observerTwo.state).to.be.equal(999);
     });
     it("should update all annotated classes when service status changes - observer from a different class", () => {
         var newObserver = new TestObserverOne();
         newObserver.state = 0;
+
         serviceStatus.goOnline();
         serviceStatus.goOffline();
-        expect(newObserver.state).to.be.equal(1);
+
+        expect(newObserver.state).to.be.equal(999);
     });
     describe("Ping", async () => {
 
         var observer, pingService, ping;
 
         before(async () => {
+            serviceStatus.observe(
+                TestObserver
+            )
             //create in instance of an observer.
             observer = new TestObserver();
 
