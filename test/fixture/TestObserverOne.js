@@ -1,18 +1,12 @@
-var ServiceStatus = require("../../dist/src/ServiceStatus").ServiceStatus;
+var serviceStatus = require("./TestObserver").serviceStatus;
 
-class PService {
-    async ping() {
+var TestObserverOne = serviceStatus.Observe(function () {
+    this.state = 0;
+    this.updateState = function () {
+        this.state = 99;
         return true;
     }
 }
-var serviceStatus = new ServiceStatus(PService);
-var TestObserverOne = serviceStatus.Observe (function () {
-        this.state = 0;
-        this.updateState = function () {
-            this.state = 99;
-            return true;
-        }
-    }
 )
 /*
 serviceStatus.observe(
@@ -21,5 +15,3 @@ serviceStatus.observe(
 */
 
 exports.TestObserverOne = TestObserverOne;
-exports.serviceStatus = serviceStatus;
-exports.PService = PService;

@@ -3,13 +3,13 @@ var chai = require('chai'),
     TestObserver = require("../fixture/TestObserver").TestObserver,
     PService = require("../fixture/TestObserver").PService,
     serviceStatus = require("../fixture/TestObserver").serviceStatus,
-    TestObserverOne = require( "../fixture/TestObserverOne").TestObserverOne,
+    TestObserverOne = require("../fixture/TestObserverOne").TestObserverOne,
     StateType = require("../../dist/src/ServiceStatus").StateType,
     SinonStub = require("sinon"),
     sinon = require("sinon");
 
 
-describe("Observer", ()=>{
+describe("Observer", () => {
 
     before(() => {
 
@@ -57,13 +57,12 @@ describe("Observer", ()=>{
     });
     describe("Ping", async () => {
 
-        var observer, pingService, ping;
+        var observer, ping;
+        var stubPingService = (hasPingService) => {
+            ping.returns(new Promise((resolve => resolve(hasPingService))));
+        };
 
         before(async () => {
-
-            //create in instance of an observer.
-            observer = new TestObserver();
-
             //setting ping service as a dummy.
             pingService = new PService();
             ping = sinon.stub(PService.prototype, "ping");
@@ -71,23 +70,26 @@ describe("Observer", ()=>{
 
         describe("@verifying ping service", async () => {
 
-            var stubPingService = (hasPingService) => {
-                ping.returns(new Promise((resolve => resolve(hasPingService))));
-            };
 
             it("should accept user defined pingservice", async () => {
-                observer.state = 0;
                 stubPingService(true);
+                observer = new TestObserver();
+                observer.state = 0;
+                
                 serviceStatus.startPing(1);
                 await new Promise(resolve => {
                     setTimeout(resolve, 10);
                 });
+                
                 //verify ping service has been called.
                 sinon.assert.called(ping);
                 //verify status was updated.
                 expect(observer.state).to.eq(999);
-                serviceStatus.cancelInterval();
             });
+        });
+        after(() => {
+            serviceStatus.cancelInterval();
+            ping.restore();
         });
     });
 
