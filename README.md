@@ -45,8 +45,7 @@ var TestObserver = serviceStatus.Observe(function () {
         this.state = 999;
         return true;
     }
-}
-)
+})
 
 exports.TestObserver = TestObserver;
 ```
