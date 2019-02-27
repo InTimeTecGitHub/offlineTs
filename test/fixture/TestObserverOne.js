@@ -8,10 +8,5 @@ var TestObserverOne = serviceStatus.Observe(function () {
     }
 }
 )
-/*
-serviceStatus.observe(
-    TestObserverOne
-)
-*/
 
 exports.TestObserverOne = TestObserverOne;

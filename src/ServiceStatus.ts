@@ -15,10 +15,6 @@ export class ServiceStatus {
 
     Observe: <T extends {new(...args: any[]): Observer}>(constructor: T) => T;
 
-    observe (funct : any){
-        funct = this.Observe(funct);
-    }
-
     attach(observer: Observer) {
         if (observer.ObserverId)
             this.observers.set(observer.ObserverId, observer);
