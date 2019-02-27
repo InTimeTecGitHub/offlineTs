@@ -5,7 +5,6 @@ var chai = require('chai'),
     serviceStatus = require("../fixture/TestObserver").serviceStatus,
     TestObserverOne = require("../fixture/TestObserverOne").TestObserverOne,
     StateType = require("../../dist/src/ServiceStatus").StateType,
-    SinonStub = require("sinon"),
     sinon = require("sinon");
 
 
