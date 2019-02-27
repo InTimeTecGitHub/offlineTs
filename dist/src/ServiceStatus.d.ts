@@ -13,7 +13,6 @@ export declare class ServiceStatus {
     Observe: <T extends {
         new (...args: any[]): Observer;
     }>(constructor: T) => T;
-    observe(funct: any): void;
     attach(observer: Observer): void;
     Ping: PingService;
     Period: number;

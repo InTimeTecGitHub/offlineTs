@@ -9,7 +9,7 @@ var chai = require('chai'),
     sinon = require("sinon");
 
 
-describe("Observer", () => {
+describe("Js Observer", () => {
 
     before(() => {
 
@@ -47,6 +47,8 @@ describe("Observer", () => {
     });
 
     it("should update all annotated classes when service status changes - observer from a different class", () => {
+        let observerOne = new TestObserver();
+        observerOne.state = 0;
         let newObserver = new TestObserverOne();
         newObserver.state = 0;
 
@@ -54,6 +56,7 @@ describe("Observer", () => {
         serviceStatus.goOffline();
 
         expect(newObserver.state).to.be.equal(99);
+        expect(observerOne.state).to.be.equal(999);
     });
     describe("Ping", async () => {
 
