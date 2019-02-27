@@ -9,5 +9,8 @@ node_modules
 !gulpfile.js
 !dist/*
 !dist/**/*
+!test/js/**
+!test/fixture/TestObserver.js
+!test/fixture/TestObserverOne.js
 .nyc_output/*
 coverage/*

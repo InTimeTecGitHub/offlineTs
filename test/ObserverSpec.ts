@@ -64,6 +64,8 @@ describe("@Observer", () => {
     });
 
     it("should update all annotated classes when service status changes - observer from a different class", () => {
+        let observerOne = new SampleObserver();
+        observerOne.state = 0;
         let newObserver = new SampleObserverOne();
         newObserver.state = 0;
 
@@ -71,6 +73,7 @@ describe("@Observer", () => {
         serviceStatus.goOffline();
 
         expect(newObserver.state).to.be.equal(99);
+        expect(observerOne.state).to.be.equal(999);
     });
 
     describe("@Ping", async () => {
