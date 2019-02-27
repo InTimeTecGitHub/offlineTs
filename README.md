@@ -37,7 +37,19 @@ Start the period ping by calling:
 ```ts
 serviceStatus.startPing(1500);// 1500 ms interval period.
 ```
+Using with Javascript.
+```js
+var TestObserver = serviceStatus.Observe(function () {
+    this.state = 0;
+    this.updateState = function () {
+        this.state = 999;
+        return true;
+    }
+}
+)
 
+exports.TestObserver = TestObserver;
+```
 ## Sync Service
 Version 2 provides a service can be used to synchronize local data with remote server
 
