@@ -15,18 +15,7 @@ class DefaultPingService implements PingService {
                 mode: "cors",
                 cache: "default",
                 credentials: "same-origin"
-            })
-    //     return new Promise<boolean>((resolve) => {
-            
-    //             .then(response => {
-    //                 if (response.status === 200)
-    //                     resolve(true);
-    //                 else resolve(false);
-    //             })
-    //             .catch(error => {
-    //                 resolve(false);
-    //             });
-    //     });
+            });
     }
 }
 export var defaultPingService = new DefaultPingService();
