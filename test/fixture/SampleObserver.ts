@@ -2,7 +2,7 @@ import {StateType, ServiceStatus} from "../../src/ServiceStatus";
 
 export class PService {
     async ping() {
-        return true;
+        return new Response();
     }
 }
 export var serviceStatus = new ServiceStatus(new PService());

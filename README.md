@@ -54,8 +54,9 @@ Version 2 provides a service can be used to synchronize local data with remote s
 
 #### Basic Usage
 ```ts
-import {SyncService} from "sync";
+import {SyncService, SyncServiceStatus} from "sync";
 let syncService = new SyncService(new OfflineDataService(), maxRetry);
+SyncServiceStatus.startPing(1500);
 ```
 
 ##### OfflineDataService interface:

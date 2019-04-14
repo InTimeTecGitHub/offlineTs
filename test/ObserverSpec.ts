@@ -92,16 +92,17 @@ describe("@Observer", () => {
 
         describe("@verifying ping service and ping interval", async () => {
 
-            var stubPingService = (hasPingService: boolean) => {
+            var stubPingService = (hasPingService: Partial<Response>) => {
                 ping.returns(new Promise((resolve => resolve(hasPingService))));
             };
 
             it("should accept user defined pingservice - verify PingService ", async () => {
                 observer.state = 0;
-                stubPingService(true);
+                stubPingService({status: 200});
+                serviceStatus.State = StateType.OFFLINE;
                 serviceStatus.startPing(1);
                 await new Promise(resolve => {
-                    setTimeout(resolve, 10);
+                    setTimeout(resolve, 20);
                 });
                 //verify ping service has been called.
                 sinon.assert.called(ping);

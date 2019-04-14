@@ -118,5 +118,29 @@ describe("@SyncService", async () => {
             await syncService.updateState(StateType.ONLINE);
             expect(syncService.State).to.equal(SyncStatus.NO_DATA);
         });
+
+        it("should retry sync manually after failing 5 times", async () => {
+            stubFakes(true, false);
+
+            await syncService.updateState(StateType.ONLINE);
+
+            expect(syncService.State).to.equal(SyncStatus.DATA);
+            sinon.assert.callCount(sync, 5);
+
+            await syncService.retry();
+            sinon.assert.callCount(sync, 10);
+        });
+
+        it("should retry sync manually 3 times after failing 5 times", async () => {
+            stubFakes(true, false);
+
+            await syncService.updateState(StateType.ONLINE);
+
+            expect(syncService.State).to.equal(SyncStatus.DATA);
+            sinon.assert.callCount(sync, 5);
+
+            await syncService.retry(3);
+            sinon.assert.callCount(sync, 8);
+        });
     });
 });

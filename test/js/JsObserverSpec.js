@@ -77,6 +77,7 @@ describe("Js Observer", () => {
                 stubPingService(true);
                 observer = new TestObserver();
                 observer.state = 0;
+                serviceStatus.State = 1;
                 
                 serviceStatus.startPing(1);
                 await new Promise(resolve => {

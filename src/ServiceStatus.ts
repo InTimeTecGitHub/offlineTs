@@ -12,6 +12,7 @@ export class ServiceStatus {
     private interval: any;
     private state: StateType;
     private observers: Map<number, Observer> = new Map<number, any>();
+    private response: Response | Error;
 
     Observe: <T extends {new(...args: any[]): Observer}>(constructor: T) => T;
 
@@ -54,13 +55,20 @@ export class ServiceStatus {
         return this;
     }
     notify() {
-        this.observers.forEach(observer => observer.updateState(this.State));
+        this.observers.forEach(observer => observer.updateState(this.State, this.response));
     }
 
     private async callback() {
         if (!this.ping) return;
-        if (await this.ping.ping()) return this.goOnline();
-        else return this.goOffline();
+        await this.ping.ping()
+            .then(async (response: Response) => {
+                this.response = response;
+                if (this.response.status === 200) return this.goOnline();
+                else return this.goOffline();        
+            }).catch(async (error: Error) => {
+                this.response = error;
+                this.goOffline();
+            });
     }
 
     cancelInterval() {
