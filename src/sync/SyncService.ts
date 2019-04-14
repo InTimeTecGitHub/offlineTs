@@ -12,12 +12,11 @@ export enum SyncStatus {
 var syncServiceStatus = new ServiceStatus(defaultPingService);
 
 @syncServiceStatus.Observe
-
 export class SyncService {
     private state: number = SyncStatus.WAITING;
 
     constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
-                private maxRetry: number = Infinity) {
+        private maxRetry: number = Infinity) {
     }
 
     get State(): number {
@@ -32,6 +31,11 @@ export class SyncService {
         if (networkState === StateType.ONLINE) {
             await this.onOnline();
         }
+    }
+
+    async retry(maxRetry?: number) {
+        if (maxRetry) this.maxRetry = maxRetry;
+        await this.onOnline();
     }
 
     private async onOnline() {

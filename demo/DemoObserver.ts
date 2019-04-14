@@ -1,5 +1,5 @@
 import {ServiceStatus, StateType} from "../src/ServiceStatus";
-import {defaultPingService} from "../dist/src/PingService";
+import {defaultPingService} from "../src/PingService";
 
 let serviceStatus = new ServiceStatus(defaultPingService);
 

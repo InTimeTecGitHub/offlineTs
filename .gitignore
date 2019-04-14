@@ -7,8 +7,7 @@ node_modules
 **/**/*.d.ts
 .vscode/
 !gulpfile.js
-!dist/*
-!dist/**/*
+/dist
 !test/js/**
 !test/fixture/TestObserver.js
 !test/fixture/TestObserverOne.js

@@ -6,6 +6,7 @@
       "declaration": true,
       "strictNullChecks": true,
       "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
       "noImplicitAny": true,
       "alwaysStrict": true,
       "moduleResolution": "node",
