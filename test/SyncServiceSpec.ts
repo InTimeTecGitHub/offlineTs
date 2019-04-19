@@ -4,7 +4,6 @@ import {SinonStub} from "sinon";
 import {SyncService, SyncStatus, SyncServiceStatus} from "../src/sync/SyncService";
 import {StateType} from "../src/StateType";
 import {OfflineDataService} from "../src/sync/OfflineDataService";
-import {stat} from "fs";
 
 describe("@SyncService", async () => {
     let syncService: SyncService, hasData: SinonStub, sync: SinonStub;
