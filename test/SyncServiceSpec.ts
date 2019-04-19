@@ -159,21 +159,23 @@ describe("@SyncService", async () => {
         });
 
         it("should reject sync status promise in waiting state.", async () => {
-            syncService.SyncStatus.then(() => {
+            try {
+                await syncService.SyncStatus;
                 expect(true).to.eq(false);
-            }).catch(state => {
-                expect(state).to.equal(SyncStatus.WAITING);
-            });
+            } catch (ex) {
+                expect(ex).to.eq(SyncStatus.WAITING);
+            }
         });
 
-        it("should reject sync status promise when sync fails.", async () => {
+        it("should reject sync status promise(with data) when sync fails with data.", async () => {
             stubError("Sync Failed.");
             syncService.updateState(StateType.ONLINE);
-            syncService.SyncStatus.then(() => {
+            try {
+                await syncService.SyncStatus;
                 expect(true).to.eq(false);
-            }).catch(state => {
-                expect(state).to.equal(SyncStatus.WAITING);
-            });
+            } catch (ex) {
+                expect(ex).to.eq(SyncStatus.DATA);
+            }
         })
     });
 });
