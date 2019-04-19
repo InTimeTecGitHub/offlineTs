@@ -16,7 +16,7 @@ export class SyncService {
     private state: number = SyncStatus.WAITING;
 
     constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
-        private maxRetry: number = Infinity) {
+                private maxRetry: number = Infinity) {
     }
 
     get State(): number {
@@ -66,6 +66,7 @@ export class SyncService {
                 isSyncSuccess = await this.offlineDataService.sync();
 
                 if (isSyncSuccess) {
+                    await this.offlineDataService.clear();
                     this.transitionToNoDataState();
                 } else if (retry === this.maxRetry) {
                     return;

@@ -6,18 +6,20 @@ import {StateType} from "../src/StateType";
 import {OfflineDataService} from "../src/sync/OfflineDataService";
 
 describe("@SyncService", async () => {
-    let syncService: SyncService, hasData: SinonStub, sync: SinonStub;
+    let syncService: SyncService, hasData: SinonStub, sync: SinonStub, clear: SinonStub;
     const MAX_SYNC_RETRY: number = 5;
     SyncServiceStatus.cancelInterval();
     beforeEach(async () => {
         syncService = new SyncService(new OfflineDataService(), MAX_SYNC_RETRY);
         hasData = sinon.stub(OfflineDataService.prototype, "hasData");
         sync = sinon.stub(OfflineDataService.prototype, "sync");
+        clear = sinon.stub(OfflineDataService.prototype, "clear");
     });
 
     afterEach(async () => {
         hasData.restore();
         sync.restore();
+        clear.restore();
     });
 
     //TODO: add one test that ensures, updatestate is called when service goOnline/goOffline is called.
@@ -25,6 +27,7 @@ describe("@SyncService", async () => {
         var stubFakes = (hasDataReturnValue: boolean, syncServiceReturnValue: boolean) => {
             hasData.returns(new Promise((resolve) => resolve(hasDataReturnValue)));
             sync.returns(new Promise((resolve) => resolve(syncServiceReturnValue)));
+            clear.returns(new Promise((resolve) => resolve()));
         };
 
         var stubError = (errorMsg: string) => {
@@ -36,13 +39,15 @@ describe("@SyncService", async () => {
             hasData.returns(new Promise((resolve) => resolve(true)));
             sync.onFirstCall().throws(errorMsg)
                 .onSecondCall().returns(new Promise((resolve) => resolve(true)));
+            clear.returns(new Promise((resolve) => resolve()));
         };
 
         var stubConsecutiveCalls = (hasDataReturnValue: boolean) => {
             hasData.returns(new Promise((resolve) => resolve(hasDataReturnValue)));
             sync.onFirstCall().returns(new Promise(() => {
-            }))
+                }))
                 .onSecondCall().returns(new Promise((resolve) => resolve(true)));
+            clear.returns(new Promise((resolve) => resolve()));
         };
 
         it("should transition to 'NO_DATA' state when there is no data to sync", async () => {
