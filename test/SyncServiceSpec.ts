@@ -158,9 +158,12 @@ describe("@SyncService", async () => {
             expect(state).to.eq(SyncStatus.DATA);
         });
 
-        it("should get a sync status promise with existing status when sync", async () => {
-            let state = await syncService.SyncStatus;
-            expect(state).to.eq(SyncStatus.WAITING);
+        it("should reject sync status promise in waiting state.", async () => {
+            syncService.SyncStatus.then(() => {
+                expect(true).to.eq(false);
+            }).catch(state => {
+                expect(state).to.equal(SyncStatus.WAITING);
+            });
         });
 
         it("should reject sync status promise when sync fails.", async () => {

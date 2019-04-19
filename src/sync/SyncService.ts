@@ -29,7 +29,7 @@ export class SyncService {
 
     get SyncStatus(): Promise<SyncStatus> {
         return new Promise((resolve, reject) => {
-            if (!this.syncStatus) return resolve(this.state);
+            if (!this.syncStatus) reject(this.state);
             this.syncStatus
                 .then(() => resolve(this.state))
                 .catch(() => reject(this.state));
