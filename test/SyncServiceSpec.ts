@@ -4,6 +4,7 @@ import {SinonStub} from "sinon";
 import {SyncService, SyncStatus, SyncServiceStatus} from "../src/sync/SyncService";
 import {StateType} from "../src/StateType";
 import {OfflineDataService} from "../src/sync/OfflineDataService";
+import {stat} from "fs";
 
 describe("@SyncService", async () => {
     let syncService: SyncService, hasData: SinonStub, sync: SinonStub;
@@ -142,5 +143,34 @@ describe("@SyncService", async () => {
             await syncService.retry(3);
             sinon.assert.callCount(sync, 8);
         });
+
+        it("should get a sync status promise which resolves to NO_DATA when sync succeeds", async () => {
+            stubFakes(true, true);
+            syncService.updateState(StateType.ONLINE);
+            let state = await syncService.SyncStatus;
+            expect(state).to.eq(SyncStatus.NO_DATA);
+        });
+
+        it("should get a sync status promise which resolves to DATA when sync succeeds", async () => {
+            stubFakes(true, false);
+            syncService.updateState(StateType.ONLINE);
+            let state = await syncService.SyncStatus;
+            expect(state).to.eq(SyncStatus.DATA);
+        });
+
+        it("should get a sync status promise with existing status when sync", async () => {
+            let state = await syncService.SyncStatus;
+            expect(state).to.eq(SyncStatus.WAITING);
+        });
+
+        it("should reject sync status promise when sync fails.", async () => {
+            stubError("Sync Failed.");
+            syncService.updateState(StateType.ONLINE);
+            syncService.SyncStatus.then(() => {
+                expect(true).to.eq(false);
+            }).catch(state => {
+                expect(state).to.equal(SyncStatus.WAITING);
+            });
+        })
     });
 });
