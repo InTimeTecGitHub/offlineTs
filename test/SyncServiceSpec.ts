@@ -142,5 +142,39 @@ describe("@SyncService", async () => {
             await syncService.retry(3);
             sinon.assert.callCount(sync, 8);
         });
+
+        it("should get a sync status promise which resolves to NO_DATA when sync succeeds", async () => {
+            stubFakes(true, true);
+            syncService.updateState(StateType.ONLINE);
+            let state = await syncService.SyncStatus;
+            expect(state).to.eq(SyncStatus.NO_DATA);
+        });
+
+        it("should get a sync status promise which resolves to DATA when sync succeeds", async () => {
+            stubFakes(true, false);
+            syncService.updateState(StateType.ONLINE);
+            let state = await syncService.SyncStatus;
+            expect(state).to.eq(SyncStatus.DATA);
+        });
+
+        it("should reject sync status promise in waiting state.", async () => {
+            try {
+                await syncService.SyncStatus;
+                expect(true).to.eq(false);
+            } catch (ex) {
+                expect(ex).to.eq(SyncStatus.WAITING);
+            }
+        });
+
+        it("should reject sync status promise(with data) when sync fails with data.", async () => {
+            stubError("Sync Failed.");
+            syncService.updateState(StateType.ONLINE);
+            try {
+                await syncService.SyncStatus;
+                expect(true).to.eq(false);
+            } catch (ex) {
+                expect(ex).to.eq(SyncStatus.DATA);
+            }
+        })
     });
 });

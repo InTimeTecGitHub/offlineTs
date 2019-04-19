@@ -14,7 +14,7 @@ var syncServiceStatus = new ServiceStatus(defaultPingService);
 @syncServiceStatus.Observe
 export class SyncService {
     private state: number = SyncStatus.WAITING;
-
+    private syncStatus: Promise<void>;
     constructor(private offlineDataService: OfflineDataService = new OfflineDataService(),
         private maxRetry: number = Infinity) {
     }
@@ -25,6 +25,15 @@ export class SyncService {
 
     set State(state: number) {
         this.state = state;
+    }
+
+    get SyncStatus(): Promise<SyncStatus> {
+        return new Promise((resolve, reject) => {
+            if (!this.syncStatus) reject(this.state);
+            this.syncStatus
+                .then(() => resolve(this.state))
+                .catch(() => reject(this.state));
+        });
     }
 
     async updateState(networkState: StateType) {
@@ -39,7 +48,8 @@ export class SyncService {
     }
 
     private async onOnline() {
-        await this.sync();
+        this.syncStatus = this.sync();
+        await this.syncStatus;
     }
 
     private async sync() {
