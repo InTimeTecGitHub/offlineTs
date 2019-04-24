@@ -1,6 +1,5 @@
-import {Observer} from "./Observer";
-import {PingService} from "./PingService";
-
+import { Observer } from "./Observer";
+import { PingService } from "./PingService";
 
 export enum StateType {
     ONLINE,
@@ -14,7 +13,7 @@ export class ServiceStatus {
     private observers: Map<number, Observer> = new Map<number, any>();
     private response: Response | Error;
 
-    Observe: <T extends {new(...args: any[]): Observer}>(constructor: T) => T;
+    Observe: <T extends { new(...args: any[]): Observer }>(constructor: T) => T;
 
     attach(observer: Observer) {
         if (observer.ObserverId)
@@ -58,13 +57,21 @@ export class ServiceStatus {
         this.observers.forEach(observer => observer.updateState(this.State, this.response));
     }
 
+    private compare(response: Response, expected: Response): boolean {
+        let result = false;
+        expected.status && (result = expected.status === response.status);
+        expected.headers.forEach((value, key) => {
+            result = value === response.headers.get(key);
+        })
+        return result;
+    }
     private async callback() {
         if (!this.ping) return;
         await this.ping.ping()
             .then(async (response: Response) => {
                 this.response = response;
-                if (this.response.status === 200) return this.goOnline();
-                else return this.goOffline();        
+                if (this.compare(this.response, this.expected)) return this.goOnline();
+                else return this.goOffline();
             }).catch(async (error: Error) => {
                 this.response = error;
                 this.goOffline();
@@ -81,9 +88,9 @@ export class ServiceStatus {
         this.Period = period;
     }
 
-    constructor(private ping: PingService) {
+    constructor(private ping: PingService, private expected: Response = new Response()) {
         this.state = StateType.ONLINE;
-        this.Observe = <T extends {new(...args: any[]): Observer}>(constructor: T) => {
+        this.Observe = <T extends { new(...args: any[]): Observer }>(constructor: T) => {
             var serviceStatus = this;
             return class extends constructor {
                 ObserverId = Date.now() * Math.random() * 1000;
