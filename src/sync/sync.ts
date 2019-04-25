@@ -1,2 +1,2 @@
 export {OfflineDataService} from "./OfflineDataService";
-export {SyncService, SyncServiceStatus, SyncStatus} from "./SyncService";
+export {SyncService, SyncServiceStatus, SyncStatus, MaintenanceServiceStatus} from "./SyncService";

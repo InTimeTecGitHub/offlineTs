@@ -16,8 +16,9 @@ export class ServiceStatus {
     Observe: <T extends { new(...args: any[]): Observer }>(constructor: T) => T;
 
     attach(observer: Observer) {
-        if (observer.ObserverId)
+        if (observer.ObserverId) {
             this.observers.set(observer.ObserverId, observer);
+        }
         else throw new Error("ObserverId Not Set.");
     }
 
@@ -57,21 +58,39 @@ export class ServiceStatus {
         this.observers.forEach(observer => observer.updateState(this.State, this.response));
     }
 
+    private hasDeploymentHeaders(expected: Response, response: Response) {
+        let res: boolean[] = [];
+        expected.headers.forEach((value, key) => {
+            if (response.headers.has(key)) {
+                res.push(true);
+            }
+        });
+
+        if (res.length) {
+            return res.every(Boolean);
+        }
+        return false;
+    }
+
     private compare(response: Response, expected: Response): boolean {
         let result = false;
         expected.status && (result = expected.status === response.status);
-        expected.headers.forEach((value, key) => {
-            result = value === response.headers.get(key);
-        })
         return result;
     }
+
     private async callback() {
         if (!this.ping) return;
         await this.ping.ping()
             .then(async (response: Response) => {
                 this.response = response;
-                if (this.compare(this.response, this.expected)) return this.goOnline();
-                else return this.goOffline();
+                if (this.compare(this.response, this.expected)) {
+                    if (this.hasDeploymentHeaders(this.expected, this.response)) {
+                        return this.notify();
+                    }
+                    return this.goOnline();
+                } else {
+                    return this.goOffline();
+                }
             }).catch(async (error: Error) => {
                 this.response = error;
                 this.goOffline();
@@ -88,7 +107,7 @@ export class ServiceStatus {
         this.Period = period;
     }
 
-    constructor(private ping: PingService, private expected: Response = new Response()) {
+    constructor(private ping: PingService, private expected: Response ) {
         this.state = StateType.ONLINE;
         this.Observe = <T extends { new(...args: any[]): Observer }>(constructor: T) => {
             var serviceStatus = this;
