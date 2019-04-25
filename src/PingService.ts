@@ -5,7 +5,7 @@ export interface PingService {
 class DefaultPingService implements PingService {
     async ping() {
         return fetch(
-            new Request("/favico.ico?_=" + new Date().getTime()),
+            new Request("/favicon.ico?_=" + new Date().getTime()),
             {
                 method: "HEAD",
                 headers: new Headers({
