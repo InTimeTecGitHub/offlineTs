@@ -10,7 +10,7 @@ export enum SyncStatus {
 }
 
 var syncServiceStatus = new ServiceStatus(defaultPingService, new Response(null, { "status" : 200 }));
-var maintenanceServiceStatus = new ServiceStatus(defaultPingService, new Response(null, {   headers: new Headers({
+var maintenanceWindowStatus = new ServiceStatus(defaultPingService, new Response(null, {   headers: new Headers({
         "deploymentstarted": "application/json",
         "servermaintenance": "application/json"
     })}));
@@ -95,4 +95,4 @@ export class SyncService {
 }
 
 export {syncServiceStatus as SyncServiceStatus};
-export {maintenanceServiceStatus as MaintenanceServiceStatus}
+export {maintenanceWindowStatus as MaintenanceWindowStatus}
