@@ -1,6 +1,6 @@
 {
     "name": "offlinets",
-    "version": "3.1.1",
+    "version": "3.1.2",
     "description": "ping a service to check if it is up",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
