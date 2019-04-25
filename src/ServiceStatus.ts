@@ -41,6 +41,10 @@ export class ServiceStatus {
         return this.state;
     }
 
+    get Response(): Response | Error {
+        return this.response || new Response();
+    }
+
     goOnline() {
         if (this.State !== StateType.ONLINE) {
             this.State = StateType.ONLINE;
