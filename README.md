@@ -31,6 +31,7 @@ It looks like this:
     }
 ```
 ##### Observer interface:
+###### To annotate the class with the Observe decorator in serviceStatus instance, refer version-2(usage) context.
 ```ts
 interface Observer {
     updateState: (state: StateType, response?: Response|Error) => Promise<any>;
