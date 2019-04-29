@@ -9,6 +9,8 @@ run `npm run demo` and open http://localhost:3000 to see this in action.
 Define any class that should be notified and updated when the state of service changes.
 The class should have a member updateState(state: StateType, response: Response|Error).
 updateState is called with StateType as well as the Response.
+
+#### ServiceStatus
 An instance of ServiceStatus is created like this:
 ```ts
 let serviceStatus = new ServiceStatus(new PingService());
@@ -21,20 +23,12 @@ interface PingService {
     ping: () => Promise<Response>;
 }
 ```
-
-### ServiceStatus
-This class has an exported member to get the response.
+This ServiceStatus class has an exported member to get the response.
 It looks like this:
 ```ts
  get Response(): Response | Error {
         return this.response || new Response();
     }
-```
-##### Basic Usage(Observer)
-```ts
-import {Observer} from "./Observer";
-private observers: Map<number, Observer> = new Map<number, any>();
-Observe: <T extends {new(...args: any[]): Observer}>(constructor: T) => T;
 ```
 ##### Observer interface:
 ```ts
@@ -44,6 +38,7 @@ interface Observer {
 }
 ```
 ### SyncService
+######To start the period ping, refer version-2(usage) context. 
 ##### Retry 
 Start retrying when sync fails by calling:
 ```ts
@@ -53,12 +48,6 @@ Version 3 exposes a getter method for a Promise that resolves to SyncStatus..
 It looks like this:
 ```ts
 get SyncStatus(): Promise<SyncStatus> {
-        return new Promise((resolve, reject) => {
-            if (!this.syncStatus) reject(this.state);
-            this.syncStatus
-                .then(() => resolve(this.state))
-                .catch(() => reject(this.state));
-        });
     }
 ``` 
 
