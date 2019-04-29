@@ -7,7 +7,8 @@ run `npm run demo` and open http://localhost:3000 to see this in action.
 
 #### Usage
 Define any class that should be notified and updated when the state of service changes.
-The class should have a member updateState(state: StateType).
+The class should have a member updateState(state: StateType, response: Response|Error).
+updateState is called with StateType as well as the Response.
 An instance of ServiceStatus is created like this:
 ```ts
 let serviceStatus = new ServiceStatus(new PingService());
@@ -48,10 +49,9 @@ Start retrying when sync fails by calling:
 ```ts
 syncService.retry(3);// 3 is number for maxRetry.
 ```
-Version 3 exposes a getter method for sync that returns a promise. 
+Version 3 exposes a getter method for a Promise that resolves to SyncStatus.. 
 It looks like this:
 ```ts
-private syncStatus: Promise<void>;
 get SyncStatus(): Promise<SyncStatus> {
         return new Promise((resolve, reject) => {
             if (!this.syncStatus) reject(this.state);
@@ -61,14 +61,6 @@ get SyncStatus(): Promise<SyncStatus> {
         });
     }
 ``` 
-This method is used when the state becomes online. 
-It is used like this:
-```ts
-private async onOnline() {
-        this.syncStatus = this.sync();
-        await this.syncStatus;
-    }
-```
 
 ## Version 2
 #### Usage
