@@ -3,8 +3,57 @@ offlinets will check availability of a service by pinging it.
 An example would be to detect the internet availability in the browser.
 run `npm run demo` and open http://localhost:3000 to see this in action.
 
+## Version 3
+
+#### Usage
+Define any class that should be notified and updated when the state of service changes.
+The class should have a member updateState(state: StateType, response: Response|Error).
+updateState is called with StateType as well as the Response.
+
+#### ServiceStatus
+An instance of ServiceStatus is created like this:
+```ts
+let serviceStatus = new ServiceStatus(new PingService());
+```
+ServiceStatus mandatorily takes a PingService as argument.
+PingService.ping() will be called to check service availability.
+PingService interface looks like this:
+```ts
+interface PingService {
+    ping: () => Promise<Response>;
+}
+```
+This ServiceStatus class has an exported member to get the response.
+It looks like this:
+```ts
+ get Response(): Response | Error {
+        return this.response || new Response();
+    }
+```
+##### Observer interface:
+###### To annotate the class with the Observe decorator in serviceStatus instance, refer version-2(usage) context.
+```ts
+interface Observer {
+    updateState: (state: StateType, response?: Response|Error) => Promise<any>;
+    ObserverId?: number;
+}
+```
+### SyncService
+###### To start the period ping, refer version-2(usage) context. 
+##### Retry 
+Start retrying when sync fails by calling:
+```ts
+syncService.retry(3);// 3 is number for maxRetry.
+```
+Version 3 exposes a getter method for a Promise that resolves to SyncStatus.. 
+It looks like this:
+```ts
+get SyncStatus(): Promise<SyncStatus> {
+    }
+``` 
+
 ## Version 2
-## Usage
+#### Usage
 Define any class that should be notified and updated when the state of service changes.
 The class should have a member updateState(state: StateType).
 Create an instance of ServiceStatus like:
@@ -12,7 +61,7 @@ Create an instance of ServiceStatus like:
 let serviceStatus = new ServiceStatus(new PingService());
 ```
 ServiceStatus mandatorily takes a PingService as argument.
-PingService.ping() will be called to check service avilability.
+PingService.ping() will be called to check service availability.
 PingService interface looks like this:
 ```ts
 interface PingService {
@@ -49,10 +98,10 @@ var TestObserver = serviceStatus.Observe(function () {
 
 exports.TestObserver = TestObserver;
 ```
-## Sync Service
+### Sync Service
 Version 2 provides a service can be used to synchronize local data with remote server
 
-#### Basic Usage
+##### Basic Usage
 ```ts
 import {SyncService, SyncServiceStatus} from "sync";
 let syncService = new SyncService(new OfflineDataService(), maxRetry);
@@ -77,7 +126,8 @@ interface OfflineDataService {
 Set this value to allow number of retries when sync fails.
 by default its set to **Infinity**
 
-## Usage (version 1)
+## Version 1
+#### Usage 
 Define any class that should be notified and updated when the state of service changes.
 The class should have a member updateState(state: StateType)
 Annotate it with @Observe() passing in the period of ping interval and a PingService as config.
@@ -90,7 +140,7 @@ interface PingService {
 }
 ```
 
-### This syntax uses the DefaultPingService.
+#### This syntax uses the DefaultPingService.
 ```ts
 @Observe({
     period: 1000
@@ -108,7 +158,7 @@ export class SampleObserver {
 ```
 
 
-### User implemented PingService.
+#### User implemented PingService.
 ```ts
 @Observe({
     period: 1000,
@@ -126,7 +176,7 @@ export class SampleObserver {
 }
 ```
 
-## StateType is as follows
+#### StateType is as follows
 ```ts
 export enum StateType {
     ONLINE,
