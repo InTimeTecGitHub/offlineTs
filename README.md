@@ -38,7 +38,7 @@ interface Observer {
 }
 ```
 ### SyncService
-######To start the period ping, refer version-2(usage) context. 
+#####To start the period ping, refer version-2(usage) context. 
 ##### Retry 
 Start retrying when sync fails by calling:
 ```ts
