@@ -21,8 +21,8 @@ describe("@Observer", () => {
         updateState.restore();
     });
 
-    it("should set the initial value of ServiceStatus as online", () => {
-        expect(serviceStatus.State).to.eq(StateType.ONLINE);
+    it("should have initial value of ServiceStatus as undefined", () => {
+        expect(serviceStatus.State).to.eq(undefined);
     });
 
     it("should set default value of sample observer as 0", () => {

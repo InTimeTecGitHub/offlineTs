@@ -15,8 +15,8 @@ describe("Js Observer", () => {
         serviceStatus.cancelInterval();
     });
 
-    it("should set value of the ServiceStatus as Online initially", () => {
-        expect(serviceStatus.State).to.be.equal(StateType.ONLINE);
+    it("should have value of the ServiceStatus as undefined initially", () => {
+        expect(serviceStatus.State).to.be.equal(undefined);
     });
 
     it("should set default value of sample observer as 0", () => {
@@ -78,12 +78,12 @@ describe("Js Observer", () => {
                 observer = new TestObserver();
                 observer.state = 0;
                 serviceStatus.State = 1;
-                
+
                 serviceStatus.startPing(1);
                 await new Promise(resolve => {
                     setTimeout(resolve, 10);
                 });
-                
+
                 //verify ping service has been called.
                 sinon.assert.called(ping);
                 //verify status was updated.

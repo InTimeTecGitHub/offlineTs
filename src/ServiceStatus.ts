@@ -14,7 +14,7 @@ export class ServiceStatus {
     private observers: Map<number, Observer> = new Map<number, any>();
     private response: Response | Error;
 
-    Observe: <T extends {new(...args: any[]): Observer}>(constructor: T) => T;
+    Observe: <T extends { new(...args: any[]): Observer }>(constructor: T) => T;
 
     attach(observer: Observer) {
         if (observer.ObserverId)
@@ -58,6 +58,7 @@ export class ServiceStatus {
         }
         return this;
     }
+
     notify() {
         this.observers.forEach(observer => observer.updateState(this.State, this.response));
     }
@@ -68,7 +69,7 @@ export class ServiceStatus {
             .then(async (response: Response) => {
                 this.response = response;
                 if (this.response.status === 200) return this.goOnline();
-                else return this.goOffline();        
+                else return this.goOffline();
             }).catch(async (error: Error) => {
                 this.response = error;
                 this.goOffline();
@@ -86,11 +87,11 @@ export class ServiceStatus {
     }
 
     constructor(private ping: PingService) {
-        this.state = StateType.ONLINE;
-        this.Observe = <T extends {new(...args: any[]): Observer}>(constructor: T) => {
+        this.Observe = <T extends { new(...args: any[]): Observer }>(constructor: T) => {
             var serviceStatus = this;
             return class extends constructor {
                 ObserverId = Date.now() * Math.random() * 1000;
+
                 constructor(...args: any[]) {
                     super(...args);
                     serviceStatus.attach(this);
