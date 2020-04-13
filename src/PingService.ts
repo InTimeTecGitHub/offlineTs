@@ -1,21 +1,10 @@
 export interface PingService {
-    ping: () => Promise<Response>;
+    ping: (path: string, init: RequestInit) => Promise<Response>;
 }
 
 class DefaultPingService implements PingService {
-    async ping() {
-        return fetch(
-            new Request("/favicon.ico?_=" + new Date().getTime()),
-            {
-                method: "HEAD",
-                headers: new Headers({
-                    "Accept": "application/json",
-                    "Content-Type": "application/json"
-                }),
-                mode: "cors",
-                cache: "default",
-                credentials: "same-origin"
-            });
+    async ping(path: string, init:RequestInit) {
+        return fetch( new Request(path, init));
     }
 }
 export var defaultPingService = new DefaultPingService();
