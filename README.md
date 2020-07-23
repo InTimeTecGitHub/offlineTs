@@ -86,6 +86,12 @@ Start the period ping by calling:
 ```ts
 serviceStatus.startPing(1500);// 1500 ms interval period.
 ```
+
+Provide an optional API parameter if in case want ping other than origin, if optional API is not privided it will ping the origin:
+```ts
+serviceStatus.startPing(1500, "https://localhost:3000/favicon.ico");// 1500 ms interval period.
+```
+
 Using with Javascript.
 ```js
 var TestObserver = serviceStatus.Observe(function () {
