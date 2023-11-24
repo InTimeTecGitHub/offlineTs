@@ -1,6 +1,6 @@
 {
     "name": "offlinets",
-    "version": "3.2.2",
+    "version": "3.2.4-0",
     "description": "ping a service to check if it is up",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
@@ -46,7 +46,7 @@
         "gulp-typescript": "^5.0.0",
         "gulp-uglifyes": "^0.2.1",
         "mocha": "^5.2.0",
-        "nyc": "^13.3.0",
+        "nyc": "^15.1.0",
         "sinon": "^7.2.3",
         "ts-node": "^8.0.2",
         "tsify": "^4.0.1",
